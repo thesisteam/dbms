@@ -4,10 +4,12 @@
  * Class as an Index page helper. Useful for index page manipulations.
  */
 final class Index {
+   
     static public $DEFAULT_PAGE = 'home';
     
     public function __construct() {
         # INDEX ENTITIES INITIALIZED HERE
+        
         // error reporting - all errors for development (ensure you have display_errors = On in your php.ini file)
         error_reporting(E_ALL | E_STRICT);
         mb_internal_encoding('UTF-8');
@@ -18,7 +20,6 @@ final class Index {
         
         # Determine value of Rootpath
         $WebLocation = parse_ini_file(__DIR__ . '\..\config\app.ini')['WEB_LOCATION'];
-        
         # Assign constants DIR( $ROOT, $PAGE )
         DIR::$ROOT = $_SERVER['SERVER_ADDR'] . '/' . $WebLocation;
         DIR::$PAGE = DIR::$ROOT . 'page/';
