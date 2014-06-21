@@ -6,6 +6,7 @@
 final class Index {
    
     static public $DEFAULT_PAGE = 'home';
+    static public $ROOT_PATH = '';
     
     public function __construct() {
         # INDEX ENTITIES INITIALIZED HERE
@@ -22,11 +23,12 @@ final class Index {
         $WebLocation = parse_ini_file(__DIR__ . '\..\config\app.ini')['WEB_LOCATION'];
         # Assign constants DIR( $ROOT, $PAGE )
         DIR::$ROOT = $_SERVER['SERVER_ADDR'] . '/' . $WebLocation;
-        DIR::$PAGE = DIR::$ROOT . 'page/';
+        DIR::$PAGE = 'page/';
+        DIR::$CONFIG = 'config/';
         DIR::$HEADER = DIR::$PAGE . 'header/';
         DIR::$FOOTER = DIR::$PAGE . 'footer/';
         
-        $this->ValidatePage('hello');
+        $this->ValidatePage();
     }
     
     public function LoadClass($classname) {
@@ -95,29 +97,40 @@ final class Index {
      */
     public function RenderPage(
             $page = null,
-            $header = 'default',
-            $footer = 'default',
-            $sidebar = 'default') {
+            $header = 'header',
+            $footer = 'footer',
+            $sidebar = 'sidebar') {
         $page = (is_null($page) ? self::$DEFAULT_PAGE : $page);
         
+        // Render HEADER
+        include DIR::$HEADER . $header . '.php';
+        include DIR::$HEADER . $header . '.phtml';
         
+        // Render BODY
+        include DIR::$PAGE . $page . '.php';
+        include DIR::$PAGE . $page . '.phtml';
+        
+        // Render FOOTER
+        include DIR::$FOOTER . $footer . '.php';
+        include DIR::$FOOTER . $footer . '.phtml';
     }
     
     private function ValidatePage($page = null) {
         if ($page == null) {
-            $page = self::$DEFAULT_PAGE; 
+            $page = $this->__GetPage() != null ?
+                    $this->__GetPage()
+                :   self::$DEFAULT_PAGE;
         }
         if (!preg_match('/^[a-z0-9-]+$/i', $page)) {
             // TODO log attempt, redirect attacker, ...
             //throw new Exception('Unsafe page "' . $page . '" requested');
             
-            header('location:http://' . DIR::$ROOT . '?page=404&target=' . $page);
+            header('location:http://' . DIR::$ROOT . '?page=404&target=' . $page . '&malicious=yes');
         }
         if (!$this->__HasPage($page) /* && !$this->__HasScript($page) */) {
             // TODO log attempt, redirect attacker, ...
             // throw new Exception('Page "' . $page . '" not found');
-            
-            header('location:http://' . DIR::$ROOT . 'page=404&target=' . $page);
+            header('location:http://' . DIR::$ROOT . '?page=404&target=' . $page);
         }
         return true;
     }

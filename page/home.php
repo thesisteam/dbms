@@ -6,3 +6,4 @@
  * and open the template in the editor.
  */
 
+echo '<b>This portion is from PHP Script file (.php)</b><br>';
