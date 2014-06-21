@@ -4,19 +4,43 @@ final class DIR {
     
     // Various values initialized in class 'Index' (indexer.php)
     
-    # Footer files directory
-    static public $FOOTER = '';
+    /**
+     * Footer files directory
+     * @var String
+     */ static public $FOOTER = '';
     
-    # Header files directory
-    static public $HEADER = '';
+    /**
+     * Header files directory
+     * @var String
+     */ static public $HEADER = '';
     
-    # Page files directory
-    static public $PAGE = '';
+    /**
+     * Site page files directory
+     * @var String
+     */ static public $PAGE = '';
     
-    # Site root directory
-    static public $ROOT = '';
+    /**
+     * Site root directory
+     * @var String
+     */ static public $ROOT = '';
     
-    # Config file directory
-    static public $CONFIG = '';
+    /**
+     * Config directory
+     * @var String
+     */ static public $CONFIG = '';
+     
+    /**
+     * Constants files directory
+     * @var String
+     */ static public $CONSTANT = '';
+     
+    /**
+     * System files directory
+     * @var String
+     */ static public $SYSTEM = '';
+     
+    /**
+     * Web components directory (css, 
+     */ static public $WEB = '';
     
 }

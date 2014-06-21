@@ -20,21 +20,21 @@ final class Index {
         session_start();
         
         # Determine value of Rootpath
-        $WebLocation = parse_ini_file(__DIR__ . '\..\config\app.ini')['WEB_LOCATION'];
+        $WebLocation = parse_ini_file('app.ini')['WEB_LOCATION'];
         # Assign constants DIR( $ROOT, $PAGE )
-        DIR::$ROOT = $_SERVER['SERVER_ADDR'] . '/' . $WebLocation;
-        DIR::$PAGE = 'page/';
-        DIR::$CONFIG = 'config/';
+        DIR::$ROOT = '/';
+        DIR::$CONFIG = DIR::$ROOT . 'config/';
+        DIR::$PAGE = DIR::$ROOT . 'page/';
         DIR::$HEADER = DIR::$PAGE . 'header/';
         DIR::$FOOTER = DIR::$PAGE . 'footer/';
+        DIR::$SYSTEM = DIR::$SYSTEM . 'sys/';
         
         $this->ValidatePage();
     }
     
     public function LoadClass($classname) {
-        $_assoc_Autoload = array(
-            'DIR' => __DIR__ . '\..\constant\DIR.php'
-        );
+        $WebLocation = parse_ini_file('app.ini')['WEB_LOCATION'];
+        $_assoc_Autoload = parse_ini_file('config/autoload.ini');
         if (!array_key_exists($classname, $_assoc_Autoload)) {
             echo '<br><b>Class <i>"' . $classname . '"</i> not found!</b><br>';
             return;
@@ -125,12 +125,12 @@ final class Index {
             // TODO log attempt, redirect attacker, ...
             //throw new Exception('Unsafe page "' . $page . '" requested');
             
-            header('location:http://' . DIR::$ROOT . '?page=404&target=' . $page . '&malicious=yes');
+            header('/?page=404&target=' . $page . '&malicious=yes');
         }
         if (!$this->__HasPage($page) /* && !$this->__HasScript($page) */) {
             // TODO log attempt, redirect attacker, ...
             // throw new Exception('Page "' . $page . '" not found');
-            header('location:http://' . DIR::$ROOT . '?page=404&target=' . $page);
+            header('/dbms-sms/?page=404&target=' . $page);
         }
         return true;
     }

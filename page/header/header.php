@@ -8,8 +8,7 @@
 
 # Process title
 
-
-$HEADER_appconfig = parse_ini_file(DIR::$CONFIG . 'app.ini');
+$HEADER_appconfig = parse_ini_file(DIR::$ROOT . 'sys/app.ini');
 $HEADER_title = $HEADER_appconfig['WEB_TITLE'];
 $PAGE_TITLES = parse_ini_file(DIR::$CONFIG . 'page-titles.ini');
 
