@@ -10,5 +10,6 @@ and open the template in the editor.
 
 .footer {
     background-color: #13007D;
-    color: #FFF;
+    color: rgba(255,255,255,0.75);
+    font-size: 87.5%;
 }

@@ -11,4 +11,5 @@ and open the template in the editor.
 .header {
     background-color: #13007D;
     color: #FFF;
+    box-sizing: border-box;
 }

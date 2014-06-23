@@ -6,7 +6,6 @@
 final class Index {
    
     static public $DEFAULT_PAGE = 'home';
-    static public $ROOT_PATH = '';
     
     public function __construct() {
         # INDEX ENTITIES INITIALIZED HERE
@@ -23,8 +22,8 @@ final class Index {
         $WebLocation = parse_ini_file('app.ini')['WEB_LOCATION'];
         # Assign constants DIR( $ROOT, $PAGE )
         DIR::$ROOT = '/';
-        DIR::$CONFIG = DIR::$ROOT . 'config/';
-        DIR::$PAGE = DIR::$ROOT . 'page/';
+        DIR::$CONFIG = 'config/';
+        DIR::$PAGE = 'page/';
         DIR::$HEADER = DIR::$PAGE . 'header/';
         DIR::$FOOTER = DIR::$PAGE . 'footer/';
         DIR::$SYSTEM = DIR::$SYSTEM . 'sys/';
@@ -125,12 +124,12 @@ final class Index {
             // TODO log attempt, redirect attacker, ...
             //throw new Exception('Unsafe page "' . $page . '" requested');
             
-            header('/?page=404&target=' . $page . '&malicious=yes');
+            header('location:/?page=404&target=' . $page . '&malicious=yes');
         }
         if (!$this->__HasPage($page) /* && !$this->__HasScript($page) */) {
             // TODO log attempt, redirect attacker, ...
             // throw new Exception('Page "' . $page . '" not found');
-            header('/dbms-sms/?page=404&target=' . $page);
+            header('location:?page=404&target=' . $page);
         }
         return true;
     }
