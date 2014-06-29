@@ -20,6 +20,7 @@ final class Index {
         
         # Determine value of Rootpath
         $WebLocation = parse_ini_file('app.ini')['WEB_LOCATION'];
+        
         # Assign constants DIR( $ROOT, $PAGE )
         DIR::$ROOT = '/';
         DIR::$CONFIG = 'config/';
@@ -27,6 +28,7 @@ final class Index {
         DIR::$HEADER = DIR::$PAGE . 'header/';
         DIR::$FOOTER = DIR::$PAGE . 'footer/';
         DIR::$SYSTEM = DIR::$SYSTEM . 'sys/';
+        SYS::$PAGES = parse_ini_file(DIR::$CONFIG . 'pages.ini');
         
         $this->ValidatePage();
     }
@@ -49,27 +51,42 @@ final class Index {
         return $_GET['page'];
     }
     
-    public function __GetPagefile($page) {
-        return ($this->__HasPage($page) ?
-                DIR::$PAGE . $page . '.phtml' 
+    /**
+     * Returns the path to the .PHTML file of $page, otherwise, null.
+     * @param String $page
+     * @return String
+     */
+    public static function __GetPagefile($page) {
+        return (self::__HasPage($page) ?
+                SYS::$PAGES[$page] . '.phtml' 
             :   null
         );
     }
-    
-    public function __GetScriptfile($page) {
-        return ($this->__HasScript($page) ?
-                DIR::$PAGE . $page . '.php'
+    /**
+     * Returns the path to the .PHP file of $page, otherwise, null.
+     * @param String $page
+     * @return String
+     */
+    public static function __GetScriptfile($page) {
+        return (self::__HasScript($page) ?
+                SYS::$PAGES[$page] . '.php'
             :   null
         );
     }
+
     
     /**
      * Returns if page has page file (.phtml)
      * @param String $page
      * @return boolean
      */
-    public function __HasPage($page) {
-        return file_exists(DIR::$PAGE . $page . '.phtml');
+    public static function __HasPage($page) {
+        $pages = parse_ini_file(DIR::$CONFIG . 'pages.ini');
+        if (array_key_exists($page, $pages)) {
+            return file_exists($pages[$page] . '.phtml');
+        } else {
+            return false;
+        }
     }
     
     /**
@@ -77,7 +94,7 @@ final class Index {
      * @param String $page
      * @return boolean
      */
-    public function __HasScript($page) {
+    public static function __HasScript($page) {
         return file_exists(DIR::$PAGE . $page . '.php');
     }
     
@@ -97,8 +114,7 @@ final class Index {
     public function RenderPage(
             $page = null,
             $header = 'header',
-            $footer = 'footer',
-            $sidebar = 'sidebar') {
+            $footer = 'footer') {
         $page = (is_null($page) ? self::$DEFAULT_PAGE : $page);
         
         // Render HEADER
@@ -106,8 +122,8 @@ final class Index {
         include DIR::$HEADER . $header . '.phtml';
         
         // Render BODY
-        include DIR::$PAGE . $page . '.php';
-        include DIR::$PAGE . $page . '.phtml';
+        include self::__GetScriptfile($page);
+        include self::__GetPagefile($page);
         
         // Render FOOTER
         include DIR::$FOOTER . $footer . '.php';
@@ -126,7 +142,7 @@ final class Index {
             
             header('location:/?page=404&target=' . $page . '&malicious=yes');
         }
-        if (!$this->__HasPage($page) /* && !$this->__HasScript($page) */) {
+        if (!self::__HasPage($page) /* && !$this->__HasScript($page) */) {
             // TODO log attempt, redirect attacker, ...
             // throw new Exception('Page "' . $page . '" not found');
             header('location:?page=404&target=' . $page);

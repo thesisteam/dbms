@@ -1,0 +1,30 @@
+<div class="container main">
+    <div class="container-fluid main-placeholder">
+        <c class="left">Sign up</c>
+        <br>
+        <?php
+        $form = new FORM("frmSignup", "post", "", "col-lg-6 col-md-7 col-sm-7", "left");
+            $form->AddInput("Username", "postUsername", "text", array(
+                "required" => "true",
+                "maxlength" => 20
+                ), "REQUIRED",
+                "Only alphanumeric and numberic characters, max. of 20 characters");
+            $form->AddInput("Password", "postPass1", "password", array(
+                "required" => "true",
+                "maxlength" => 30
+                ), "REQUIRED",
+                "Max. of 30 characters");
+            $form->AddInput("Confirm password", "postPass2", "password", array(
+                "required" => "true",
+                "maxlength" => 30
+                ), "REQUIRED");
+            $form->AddInput("E-mail address", "postEmail", "email", array(
+                "required" => "true",
+                "maxlength" => 60
+                ), "REQUIRED");
+        $form->RenderSubmitButton("Sign up");
+        $form->RenderCancelButton("Cancel");
+        $form->EndForm();
+        ?>
+    </div>
+</div>
