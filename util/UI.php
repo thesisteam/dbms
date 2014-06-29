@@ -1,7 +1,7 @@
 <?php
 
 final class UI {
-    
+            
     /**
      * Generates URL of a page, should be ECHOed
      * @param type $page
@@ -13,6 +13,14 @@ final class UI {
         else {
             return '?page=NO-PAGE';
         }
+    }
+    
+    public static function HorizontalLine() {
+        echo '<hr>';
+    }
+    
+    public static function NewLine() {
+        echo '<br>';
     }
     
 }

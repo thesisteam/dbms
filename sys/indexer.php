@@ -18,6 +18,9 @@ final class Index {
         // session
         session_start();
         
+        # Connect to database
+        $PDO = PDOSQL::Connect();
+        
         # Determine value of Rootpath
         $WebLocation = parse_ini_file('app.ini')['WEB_LOCATION'];
         

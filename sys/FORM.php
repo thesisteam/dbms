@@ -25,7 +25,7 @@ final class FORM {
     }
     
     /**
-     * 
+     * Render an input element
      * @param String $label Label field text
      * @param String $name Input name
      * @param String $type Input type
@@ -34,19 +34,41 @@ final class FORM {
      * @param String $tooltip Hint text for this field
      * @param String $input_class Input's additional CSS class
      */
-    public function AddInput($label, $name, $type, $options=array(), $scheme="DEFAULT", $tooltip=null, $input_class = "") {
+    public function AddInput($label, $name, $type, $options=array(), $scheme="DEFAULT", $tooltip=null, $is_fullwidth=false, $input_class = "") {
         $input_id = strtolower(str_replace(" ", "", $name));
         $scheme = strtoupper($scheme);
         $label_class = ($scheme==="REQUIRED" ? "label-primary" : "label-default");
         echo '<label class="label ' . $label_class . '" for="'.$input_id.'">' . $label . '</label>';
-        if ($tooltip !== null) {
+        if ($tooltip !== null || strlen($tooltip) > 0) {
             echo '<label class="label label-warning">'.$tooltip.'</label>';
         }
-        echo '<input type="' . $type . '" class="form-control ' . $input_class . '" id="' . $input_id . '" ';
+        echo '<input type="' . $type . '" class="form-control' . (!$is_fullwidth ? '-free ':' ') . $input_class . '" id="' . $input_id . '" ';
         do {
             echo strtolower(str_replace(" ", "", key($options))) . '="' . current($options) . '" ';
         } while (next($options));
         echo '><br>';
+    }
+    
+    public function AddDropdown($label, $name, $choices=array(), $options=array(), $scheme="DEFAULT", $tooltip=null, $is_fullwidth=false, $input_class=null) {
+        $input_id = strtolower(str_replace(" ", "", $name));
+        $scheme = strtoupper($scheme);
+        $label_class = ($scheme==="REQUIRED" ? "label-primary" : "label-default");
+        echo '<label class="label ' . $label_class . '" for="'.$input_id.'">' . $label . '</label>';
+        if ($tooltip !== null || strlen($tooltip) > 0) {
+            echo '<label class="label label-warning">'.$tooltip.'</label>';
+        }
+        echo '<select name="' . $name . '" class="form-control' . (!$is_fullwidth ? '-free ':' ') . $input_class . '" id="' . $input_id . '" ';
+        do {
+            echo strtolower(str_replace(" ", "", key($options))) . '="' . current($options) . '" ';
+        } while (next($options));
+        echo '>';
+        
+        // Choices available
+        do {
+            echo '<option value="' . current($choices) . '">' . key($choices) . '</option>';
+        } while(next($choices));
+        echo '</select><br>';
+        
     }
     
     public function AddHidden($name, $value) {
