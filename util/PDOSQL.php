@@ -3,8 +3,9 @@
 /**
  * Static class for PDO-MySQL implementations
  */
-final class PDOSQL {
+final class PDOSQL extends ACCOUNTS {
     
+    public $query = "";
     /**
      * Connects to MySQL via PDO
      * @return \PDO
@@ -18,6 +19,11 @@ final class PDOSQL {
     
     public static function __GetDriverInfo() {
         return pdo_drivers();
+    }
+    
+    public function InsertInto($tablename) {
+        $this->query = 'INSERT INTO `' . $tablename . '` ';
+        return $this;
     }
     
 }

@@ -14,7 +14,7 @@
 final class ACCOUNTS {
     
     public static function Create($formdata) {
-        
+        SQL->InsertInto()
     }
     
 }
