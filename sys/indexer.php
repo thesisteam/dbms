@@ -6,6 +6,7 @@
 final class Index {
    
     static public $DEFAULT_PAGE = 'home';
+    static public $FLASHES = array();
     
     public function __construct() {
         # INDEX ENTITIES INITIALIZED HERE
@@ -35,9 +36,6 @@ final class Index {
         
         # Validate the current page action call
         $this->ValidatePage();
-        
-        # Declare a unique app key
-        define('ASTRAKEY', 'DJF3490FUS90D');
     }
     
     public function LoadClass($classname) {
@@ -80,7 +78,6 @@ final class Index {
             :   null
         );
     }
-
     
     /**
      * Returns if page has page file (.phtml)
@@ -103,6 +100,19 @@ final class Index {
      */
     public static function __HasScript($page) {
         return file_exists(DIR::$PAGE . $page . '.php');
+    }
+    
+    /**
+     * Checks if $_POST has content during the load of this page
+     * @param string $datakey (Optional) The key of the post data to be extracted
+     * @return boolean
+     */
+    public static function __HasPostData($datakey = null) {
+        if (is_null($datakey)) {
+            return count($_POST) > 0;
+        } else {
+            return array_key_exists($datakey, $_POST);
+        }
     }
     
     /**
@@ -130,6 +140,8 @@ final class Index {
         
         // Render BODY
         include self::__GetScriptfile($page);
+        # Include flashes
+        FLASH::Initialize();
         include self::__GetPagefile($page);
         
         // Render FOOTER

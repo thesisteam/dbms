@@ -2,10 +2,11 @@
     <div class="container-fluid main-placeholder">
         <c class="left">Sign up for an account</c>
         <br>
+        <br>
         <?php
         $DEFAULT_SIZE = 32;
         
-        $form = new FORM("frmSignup", "post", "processor/signup.php", "col-lg-6 col-md-7 col-sm-7", "left");
+        $form = new FORM("frmSignup", "post", "", "col-lg-6 col-md-7 col-sm-7", "left");
         
             $form->AddDropdown("Account type", "postType", array(
                 "Teacher/Instructor" => 1,
@@ -103,5 +104,7 @@
         UI::NewLine();
         $form->EndForm();
         ?>
+        
+        <br>
     </div>
 </div>

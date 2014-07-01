@@ -8,6 +8,15 @@ final class SYS {
      */
     static public $PAGES = array();
     
+    /**
+     * Returns an array of viewable site pages
+     * @return Array(Assoc)
+     */
+    public static function getPages() {
+        self::$PAGES = parse_ini_file(DIR::$CONFIG . 'pages.ini');
+        return self::$PAGES;
+    }
+    
 }
 
 ?>

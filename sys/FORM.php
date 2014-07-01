@@ -49,6 +49,17 @@ final class FORM {
         echo '><br>';
     }
     
+    /**
+     * Adds a dropdown HTML element
+     * @param String $label
+     * @param String  $name
+     * @param Array[][] $choices
+     * @param Array[][] $options
+     * @param String $scheme
+     * @param String $tooltip
+     * @param Boolean $is_fullwidth
+     * @param type $input_class
+     */
     public function AddDropdown($label, $name, $choices=array(), $options=array(), $scheme="DEFAULT", $tooltip=null, $is_fullwidth=false, $input_class=null) {
         $input_id = strtolower(str_replace(" ", "", $name));
         $scheme = strtoupper($scheme);
@@ -58,12 +69,16 @@ final class FORM {
             echo '<label class="label label-warning">'.$tooltip.'</label>';
         }
         echo '<select name="' . $name . '" class="form-control' . (!$is_fullwidth ? '-free ':' ') . $input_class . '" id="' . $input_id . '" ';
-        do {
-            echo strtolower(str_replace(" ", "", key($options))) . '="' . current($options) . '" ';
-        } while (next($options));
+        // Check and apply `$options` array parameter
+        if (count($options) > 0) {
+            do {
+                echo strtolower(str_replace(" ", "", key($options))) . '="' . current($options) . '" ';
+            } while (next($options));
+        }
         echo '>';
         
-        // Choices available
+        // Check and apply `$choices` array parameter
+        //  for this dropdown element
         do {
             echo '<option value="' . current($choices) . '">' . key($choices) . '</option>';
         } while(next($choices));
