@@ -5,11 +5,13 @@
         <?php
         $DEFAULT_SIZE = 32;
         
-        $form = new FORM("frmSignup", "post", "", "col-lg-6 col-md-7 col-sm-7", "left");
+        $form = new FORM("frmSignup", "post", "processor/signup.php", "col-lg-6 col-md-7 col-sm-7", "left");
+        
             $form->AddDropdown("Account type", "postType", array(
                 "Teacher/Instructor" => 1,
                 "Student" => 2
             ), array(), "REQUIRED");
+            
             UI::NewLine();
             $form->AddInput("Username", "postUsername", "text", array(
                 "required" => "true",

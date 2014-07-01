@@ -42,7 +42,7 @@ final class FORM {
         if ($tooltip !== null || strlen($tooltip) > 0) {
             echo '<label class="label label-warning">'.$tooltip.'</label>';
         }
-        echo '<input type="' . $type . '" class="form-control' . (!$is_fullwidth ? '-free ':' ') . $input_class . '" id="' . $input_id . '" ';
+        echo '<input type="' . $type . '" name="' . $name . '" class="form-control' . (!$is_fullwidth ? '-free ':' ') . $input_class . '" id="' . $input_id . '" ';
         do {
             echo strtolower(str_replace(" ", "", key($options))) . '="' . current($options) . '" ';
         } while (next($options));

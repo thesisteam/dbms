@@ -33,7 +33,11 @@ final class Index {
         DIR::$SYSTEM = DIR::$SYSTEM . 'sys/';
         SYS::$PAGES = parse_ini_file(DIR::$CONFIG . 'pages.ini');
         
+        # Validate the current page action call
         $this->ValidatePage();
+        
+        # Declare a unique app key
+        define('ASTRAKEY', 'DJF3490FUS90D');
     }
     
     public function LoadClass($classname) {

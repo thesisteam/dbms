@@ -14,7 +14,20 @@
 final class ACCOUNTS {
     
     public static function Create($formdata) {
-        SQL->InsertInto()
+        $pdosql = new PDOSQL();
+        
+        return $pdosql->InsertInto('user', array(
+                'username', 'password', 'email', 'secquestion', 'secanswer', 'status', 'is_online', 'userpower_id'
+            ))->Values(array(
+                '"'.$formdata['postUsername'].'"',
+                '"'.$formdata['postPass1'].'"',
+                '"'.$formdata['postEmail'].'"',
+                '"'.$formdata['postSecquestion'].'"',
+                '"'.$formdata['postSecanswer'].'"',
+                2,
+                0,
+                1
+                ));
     }
     
 }
