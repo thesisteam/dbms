@@ -32,17 +32,27 @@ final class FORM {
      * @param Array $options Input's additional HTML properties
      * @param String $scheme Input scheme (Default or Required)
      * @param String $tooltip Hint text for this field
+     * @param Boolean $is_fullwidth Set if this element's width should be 100%
      * @param String $input_class Input's additional CSS class
      */
     public function AddInput($label, $name, $type, $options=array(), $scheme="DEFAULT", $tooltip=null, $is_fullwidth=false, $input_class = "") {
+        # <input> ID, SCHEME, <label> initializations
         $input_id = strtolower(str_replace(" ", "", $name));
         $scheme = strtoupper($scheme);
         $label_class = ($scheme==="REQUIRED" ? "label-primary" : "label-default");
+        
+        # <label> printing
         echo '<label class="label ' . $label_class . '" for="'.$input_id.'">' . $label . '</label>';
         if ($tooltip !== null || strlen($tooltip) > 0) {
             echo '<label class="label label-warning">'.$tooltip.'</label>';
         }
+        # <input> printing
         echo '<input type="' . $type . '" name="' . $name . '" class="form-control' . (!$is_fullwidth ? '-free ':' ') . $input_class . '" id="' . $input_id . '" ';
+        # -- check for existing POST data and set value if exist
+        if(Index::__HasPostData($name) /* Check if password field */ && trim(strtolower($type))!='password') {
+            echo 'value="' . DATA::__getPOST($name, false, true) . '" ';
+        }
+        # -- check for optional attributes ($options) and add each if exist
         do {
             echo strtolower(str_replace(" ", "", key($options))) . '="' . current($options) . '" ';
         } while (next($options));
@@ -64,6 +74,7 @@ final class FORM {
         $input_id = strtolower(str_replace(" ", "", $name));
         $scheme = strtoupper($scheme);
         $label_class = ($scheme==="REQUIRED" ? "label-primary" : "label-default");
+        
         echo '<label class="label ' . $label_class . '" for="'.$input_id.'">' . $label . '</label>';
         if ($tooltip !== null || strlen($tooltip) > 0) {
             echo '<label class="label label-warning">'.$tooltip.'</label>';
@@ -80,7 +91,11 @@ final class FORM {
         // Check and apply `$choices` array parameter
         //  for this dropdown element
         do {
-            echo '<option value="' . current($choices) . '">' . key($choices) . '</option>';
+            echo '<option value="' . current($choices) . '" '
+                    . (Index::__HasPostData($name) ? 
+                        ( DATA::__getPOST($name) == current($choices) ? 'selected' : '' 
+                            ) : '') 
+                    . '>' . key($choices) . '</option>';
         } while(next($choices));
         echo '</select><br>';
         

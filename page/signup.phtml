@@ -19,7 +19,7 @@
                 "maxlength" => 20,
                 "size" => $DEFAULT_SIZE
                 ), "REQUIRED",
-                "A-Z, a-z, 0-9, max. of 20 characters");
+                "a-z, 0-9, max. of 20 characters");
             $form->AddInput("Password", "postPass1", "password", array(
                 "required" => "true",
                 "maxlength" => 30,
@@ -78,7 +78,6 @@
                     "maxlength" => 130
                 ), "REQUIRED", "Your current address", true);
                 $form->AddInput("Address 2", "postAddress2", "text", array(
-                    "required" => "true",
                     "maxlength" => 130
                 ), "DEFAULT", "Home/alternative address (optional)", true);
                 $form->AddInput("City", "postCity", "text", array(

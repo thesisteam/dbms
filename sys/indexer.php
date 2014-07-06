@@ -7,6 +7,7 @@ final class Index {
    
     static public $DEFAULT_PAGE = 'home';
     static public $FLASHES = array();
+    static public $MYSQLI;
     
     public function __construct() {
         # INDEX ENTITIES INITIALIZED HERE
@@ -19,8 +20,6 @@ final class Index {
         // session
         session_start();
         
-        # Connect to database
-        $PDO = PDOSQL::Connect();
         
         # Determine value of Rootpath
         $WebLocation = parse_ini_file('app.ini')['WEB_LOCATION'];
