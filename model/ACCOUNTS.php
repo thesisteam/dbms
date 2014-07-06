@@ -18,19 +18,25 @@ final class ACCOUNTS {
      * @return Boolean If success or not
      */
     public static function Create($formdata) {
+        # Data preparation
+        # -- Secure the contents of password
+        $postPass1 = self::Encryptor(DATA::__GetPOST('postPass1'), "ENCRYPT");
+        $postSecquestion = self::Encryptor(DATA::__GetPOST('postSecquestion', true, true), "ENCRYPT");
+        $postSecanswer = self::Encryptor(DATA::__GetPOST('postSecanswer', true, true), "ENCRYPT");
+        
         $mysql = new DB();
         
         return $mysql->InsertInto('user', array(
                 'username', 'password', 'email', 'secquestion', 'secanswer', 'status', 'is_online', 'userpower_id'
             ))->Values(array(
-                '"'.strtolower(DATA::__getPOST('postUsername', true, true)).'"',
-                '"'.DATA::__getPOST('postPass1', true, true).'"',
-                '"'.strtolower(DATA::__getPOST('postEmail', true, true)).'"',
-                '"'.DATA::__getPOST('postSecquestion', true, true).'"',
-                '"'.DATA::__getPOST('postSecanswer', true, true).'"',
+                '"'.strtolower(DATA::__GetPOST('postUsername', true, true)).'"',
+                '"'.$postPass1.'"',
+                '"'.strtolower(DATA::__GetPOST('postEmail', true, true)).'"',
+                '"'.$postSecquestion.'"',
+                '"'.$postSecanswer.'"',
                 2,
                 0,
-                DATA::__getPOST('postType')
+                DATA::__GetPOST('postType')
                 ))->Execute()->rows_affected > 0;
     }
     
@@ -41,33 +47,77 @@ final class ACCOUNTS {
      */
     public static function CreateProfile($formdata) {
         $pdosql = new DB();
-        $result = $pdosql->Select('user_id')
+        $result = $pdosql->Select(array('id'))
                 ->From('user')
-                ->Where('`username`="'.strtolower(DATA::__getPOST('username',true,true)).'"')
+                ->Where('`username`="'.strtolower(DATA::__GetPOST('postUsername',true,true)).'"')
                 ->Query();
         if (count($result) <= 0) {
-            die('Error at CreateProfile($formdata), no user exist to create a profile.');
+            return false;
         }
         
         # Data extraction
-        $user_id = $result[0]['user_id'];
-        $fname = ucfirst(DATA::__extractPost($formdata, 'postFname', true, true, true));
-        $mname = ucfirst(DATA::__extractPost($formdata, 'postMname', true, true, true));
-        $lname = ucfirst(DATA::__extractPost($formdata, 'postLname', true, true, true));
-        $gender = DATA::__extractPost($formdata, 'postGender', true, true, true);
-        $address1 = DATA::__extractPost($formdata, 'postAddress1', true, true);
-        $address2 = DATA::__extractPost($formdata, 'postAddress2', true, true);
-        $city = DATA::__extractPost($formdata, 'postCity', true, true);
-        $province = DATA::__extractPost($formdata, 'postProvince', true, true);
-        $birthdate = 'STR_TO_DATE("' . DATA::__extractPost($formdata, 'postBirthday', true, true) . '", "%m/%d/%Y")';
-        $mobile = DATA::__extractPost($formdata, 'postMobile', true, true, true);
+        $user_id = $result[0]['id'];
+        $fname = ucfirst(DATA::__ExtractPost($formdata, 'postFname', true, true, true));
+        $mname = ucfirst(DATA::__ExtractPost($formdata, 'postMname', true, true, true));
+        $lname = ucfirst(DATA::__ExtractPost($formdata, 'postLname', true, true, true));
+        $gender = DATA::__ExtractPost($formdata, 'postGender', true, true, true);
+        $address1 = DATA::__ExtractPost($formdata, 'postAddress1', true, true);
+        $address2 = DATA::__ExtractPost($formdata, 'postAddress2', true, true);
+        $city = DATA::__ExtractPost($formdata, 'postCity', true, true);
+        $province = DATA::__ExtractPost($formdata, 'postProvince', true, true);
+        $birthdate = 'STR_TO_DATE("' . DATA::__ExtractPost($formdata, 'postBirthday', true, true) . '", "%m/%d/%Y")';
+        $mobile = DATA::__ExtractPost($formdata, 'postMobile', true, true, true);
         
-        return $pdosql->InsertInto("profile", array(
+        $success = $pdosql->InsertInto("profile", array(
                 'user_id', 'fname', 'mname', 'lname', 'gender', 'address1', 'address2', 'city', 'province', 'birthdate', 'mobile'
             ))->Values(array(
-                $user_id, $fname, $mname, $lname, $gender, $address1, $address2, $city, $province, $birthdate, $mobile
-            ))->Execute()
+                $user_id,
+                '"'.$fname.'"',
+                '"'.$mname.'"',
+                '"'.$lname.'"',
+                '"'.$gender.'"',
+                '"'.$address1.'"',
+                '"'.$address2.'"',
+                '"'.$city.'"',
+                '"'.$province.'"', $birthdate, '"'.$mobile.'"'
+                ))->Execute()
               ->rows_affected > 0;
+        return $success;
+    }
+    
+    /**
+     * Deletes a user account (including profile) from database
+     * @param INT $user_id The ID of the user to be deleted
+     * @return Boolean If deletion is success or not
+     */
+    public static function Delete($user_id) {
+        $mysql = new DB();
+        $success_profile = $mysql->DeleteFrom('profile')
+                    ->Where('`user_id`=' . $user_id)
+                    ->Execute()
+                    ->rows_affected > 0;
+        if ($success_profile) {
+            $mysql = new DB();
+            $success_user = $mysql->DeleteFrom('user')
+                            ->Where('`id`=' . $user_id)
+                            ->Execute()
+                            ->rows_affected > 0;
+        }
+        return $success_profile && $success_user;
+    }
+    
+    /**
+     * Encrypts or decrypts sensitive (binary) data
+     * @param String $data The data to be processed
+     * @param String $str_mode Choose: "ENCRYPT" or "DECRYPT"
+     */
+    public static function Encryptor($data, $str_mode) {
+        $mode = strtoupper($str_mode);
+        if ($mode == 'ENCRYPT') {
+            return base64_encode(bin2hex($data));
+        } else {
+            return hex2bin(base64_decode($data));
+        }
     }
     
     /**

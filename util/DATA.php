@@ -22,7 +22,7 @@ final class DATA {
      * @param Boolean|null $is_tolower True will make LowerCase, otherwise, UpperCase, NULL makes it do nothing
      * @return Mixed|null
      */
-    public static function __extractPost($POST_DATA, $datakey, $is_trimspaces=false, $is_striphtml=false, $is_tolower=null){
+    public static function __ExtractPost($POST_DATA, $datakey, $is_trimspaces=false, $is_striphtml=false, $is_tolower=null){
         if (!array_key_exists($datakey, $POST_DATA)) {
             return null;
         }
@@ -47,7 +47,7 @@ final class DATA {
      * @param Boolean|null $is_tolower True will make LowerCase, otherwise, UpperCase, NULL makes it do nothing
      * @return Mixed|null
      */
-    public static function __getPOST($datakey, $is_trimspaces=false, $is_striphtml=false, $is_tolower=null) {
+    public static function __GetPOST($datakey, $is_trimspaces=false, $is_striphtml=false, $is_tolower=null) {
         if (!array_key_exists($datakey, $_POST)) {
             return null;
         }
@@ -75,6 +75,24 @@ final class DATA {
         } else {
             return array_key_exists($datakey, $_POST);
         }
+    }
+    
+    /**
+     * Reformats a date %m/%d/%Y into another format
+     * @param type $str_date The date string in format %m/%d/%Y
+     * @param type $formatmask New date format: e.g. %d-%m-%Y
+     * @return The new date with respect to '$formatmask'
+     */
+    public static function __ReformatDate($str_date, $formatmask) {
+        $month = substr($str_date, 0, 2);
+        $day = substr($str_date, 3, 2);
+        $year = substr($str_date, 5, 2);
+        $date = $formatmask;
+        
+        $date = str_replace('%m', $month, $date);
+        $date = str_replace('%d', $day, $date);
+        $date = str_replace('%Y', $year, $date);
+        return $date;
     }
     
 }

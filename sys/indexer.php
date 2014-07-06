@@ -35,6 +35,11 @@ final class Index {
         
         # Validate the current page action call
         $this->ValidatePage();
+        
+        # Check for dedicated flashes, otherwise, clears it
+        if (!FLASH::_isDedicatedHere()) {
+            FLASH::clearFlashes();
+        }
     }
     
     public function LoadClass($classname) {
@@ -48,9 +53,9 @@ final class Index {
         return;
     }
     
-    public function __GetPage() {
+    public static function __GetPage() {
         if (!array_key_exists('page', $_GET)) {
-            return null;
+            return self::$DEFAULT_PAGE;
         }
         return $_GET['page'];
     }
@@ -61,10 +66,10 @@ final class Index {
      * @return String
      */
     public static function __GetPagefile($page) {
-        return (self::__HasPage($page) ?
-                SYS::$PAGES[$page] . '.phtml' 
-            :   null
-        );
+        $result = self::__HasScript($page) ?
+                SYS::$PAGES[$page] . '.phtml'
+            :   null;
+        return $result;
     }
     /**
      * Returns the path to the .PHP file of $page, otherwise, null.
@@ -72,10 +77,10 @@ final class Index {
      * @return String
      */
     public static function __GetScriptfile($page) {
-        return (self::__HasScript($page) ?
+        $result = self::__HasScript($page) ?
                 SYS::$PAGES[$page] . '.php'
-            :   null
-        );
+            :   null;
+        return $result;
     }
     
     /**
@@ -98,7 +103,10 @@ final class Index {
      * @return boolean
      */
     public static function __HasScript($page) {
-        return file_exists(DIR::$PAGE . $page . '.php');
+        if (!array_key_exists($page, SYS::$PAGES)) {
+            return false;
+        }
+        return file_exists(SYS::$PAGES[$page] . '.php');
     }
     
     /**
@@ -118,7 +126,7 @@ final class Index {
      * Renders the page by default parameters
      */
     public function Run() {
-        $this->RenderPage($this->__GetPage());
+        $this->RenderPage(Index::__GetPage());
     }
     
     /**
@@ -150,8 +158,8 @@ final class Index {
     
     private function ValidatePage($page = null) {
         if ($page == null) {
-            $page = $this->__GetPage() != null ?
-                    $this->__GetPage()
+            $page = Index::__GetPage() != null ?
+                    Index::__GetPage()
                 :   self::$DEFAULT_PAGE;
         }
         if (!preg_match('/^[a-z0-9-]+$/i', $page)) {

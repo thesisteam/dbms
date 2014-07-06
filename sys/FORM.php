@@ -50,7 +50,7 @@ final class FORM {
         echo '<input type="' . $type . '" name="' . $name . '" class="form-control' . (!$is_fullwidth ? '-free ':' ') . $input_class . '" id="' . $input_id . '" ';
         # -- check for existing POST data and set value if exist
         if(Index::__HasPostData($name) /* Check if password field */ && trim(strtolower($type))!='password') {
-            echo 'value="' . DATA::__getPOST($name, false, true) . '" ';
+            echo 'value="' . DATA::__GetPOST($name, false, true) . '" ';
         }
         # -- check for optional attributes ($options) and add each if exist
         do {
@@ -93,7 +93,7 @@ final class FORM {
         do {
             echo '<option value="' . current($choices) . '" '
                     . (Index::__HasPostData($name) ? 
-                        ( DATA::__getPOST($name) == current($choices) ? 'selected' : '' 
+                        ( DATA::__GetPOST($name) == current($choices) ? 'selected' : '' 
                             ) : '') 
                     . '>' . key($choices) . '</option>';
         } while(next($choices));

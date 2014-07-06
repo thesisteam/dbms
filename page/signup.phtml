@@ -90,10 +90,10 @@
                     "maxlength" => 50,
                     "size" => $DEFAULT_SIZE
                 ), "REQUIRED");
-                $form->AddInput("Birthday", "postBirthday", "date", array(
+                $form->AddInput("Birthday", "postBirthday", "text", array(
                     "required" => "true",
                     "maxlength" => 10
-                ), "REQUIRED", "Format: mm/dd/yyyy");
+                ), "REQUIRED", "Format should be: mm/dd/yyyy");
             ?>
         </div>
         <?php
@@ -107,3 +107,4 @@
         <br>
     </div>
 </div>
+<script type="text/javascript" src="web+/site/js/page-signup.js"></script>

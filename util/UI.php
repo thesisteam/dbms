@@ -33,6 +33,21 @@ final class UI {
         echo '<br>';
     }
     
+    /**
+     * Redirects the user to certain page in this site
+     * @param String $pagename The name of the page where the user will be redirected
+     * @param Array(Assoc) Assoc-array containing additional GET values in redirection URL
+     */
+    public static function RedirectTo($pagename, $addons = array()) {
+        $redir_string = 'location:?page=' . str_replace(' ', '-', trim(strtolower($pagename)));
+        if (count($addons) > 0) {
+            do {
+                $redir_string .= '&' . str_replace(' ', '', (trim(key($addons)))) . '=' . urlencode(current($addons));
+            } while(next($addons));
+        }
+        header($redir_string);
+    }
+    
 }
 
 ?>
