@@ -114,9 +114,11 @@ final class ACCOUNTS {
     public static function Encryptor($data, $str_mode) {
         $mode = strtoupper($str_mode);
         if ($mode == 'ENCRYPT') {
-            return base64_encode(bin2hex($data));
+            $encrypted = base64_encode(bin2hex($data));
+            return $encrypted;
         } else {
-            return hex2bin(base64_decode($data));
+            $decrypted = hex2bin(base64_decode($data));
+            return $decrypted;
         }
     }
     

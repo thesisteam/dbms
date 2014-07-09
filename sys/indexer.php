@@ -20,17 +20,18 @@ final class Index {
         // session
         session_start();
         
+        # Determine if System is properly installed
+        if (!SYS::__isProperlyInstalled() && self::__GetPage()!='install') {
+            UI::RedirectTo('install');
+        }
         
         # Determine value of Rootpath
         $WebLocation = parse_ini_file('app.ini')['WEB_LOCATION'];
         
         # Assign constants DIR( $ROOT, $PAGE )
         DIR::$ROOT = '/';
-        DIR::$CONFIG = 'config/';
-        DIR::$PAGE = 'page/';
         DIR::$HEADER = DIR::$PAGE . 'header/';
         DIR::$FOOTER = DIR::$PAGE . 'footer/';
-        DIR::$SYSTEM = DIR::$SYSTEM . 'sys/';
         SYS::$PAGES = parse_ini_file(DIR::$CONFIG . 'pages.ini');
         
         # Validate the current page action call

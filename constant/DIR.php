@@ -17,30 +17,30 @@ final class DIR {
     /**
      * Site page files directory
      * @var String
-     */ static public $PAGE = '';
+     */ static public $PAGE = 'page/';
     
     /**
      * Site root directory
      * @var String
-     */ static public $ROOT = '';
+     */ static public $ROOT = '/';
     
     /**
      * Config directory
      * @var String
-     */ static public $CONFIG = '';
+     */ static public $CONFIG = 'config/';
      
     /**
      * Constants files directory
      * @var String
-     */ static public $CONSTANT = '';
+     */ static public $CONSTANT = 'constant/';
      
     /**
      * System files directory
      * @var String
-     */ static public $SYSTEM = '';
+     */ static public $SYSTEM = 'sys/';
      
     /**
      * Web components directory (css, 
-     */ static public $WEB = '';
+     */ static public $WEB = 'web+/';
     
 }

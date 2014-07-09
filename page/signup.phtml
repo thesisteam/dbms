@@ -94,12 +94,13 @@
                     "required" => "true",
                     "maxlength" => 10
                 ), "REQUIRED", "Format should be: mm/dd/yyyy");
+                
             ?>
         </div>
         <?php
         UI::NewLine();
         $form->RenderSubmitButton("Sign up");   
-        $form->RenderCancelButton("Cancel");
+        $form->RenderCancelButton("Cancel", 'home');
         UI::NewLine();
         $form->EndForm();
         ?>

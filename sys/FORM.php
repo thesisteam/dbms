@@ -105,12 +105,21 @@ final class FORM {
         echo '<input type="hidden" name="'.$name.'" value="' . $value . '">';
     }
     
+    public function AddText($text, $str_size='mid', $str_alignment='left') {
+        echo '<c class="' . $str_size . ' ' . $str_alignment . '">'
+                . $text . '</c>';
+        echo '<br>';
+    }
+    
     public function RenderSubmitButton($caption) {
         echo ' <input type="submit" value="' . $caption . '" class="btn btn-primary btn-sm"> ';
     }
     
-    public function RenderCancelButton($caption) {
-        echo ' <input type="button" value="'  . $caption . '" class="btn btn-warning btn-sm"> ';
+    public function RenderCancelButton($caption, $str_actionpage=null) {
+        echo ' <input type="button" '
+                . 'value="'  . $caption . '" '
+                . 'class="btn btn-warning btn-sm"'
+                . 'onclick="' . (is_null($str_actionpage) ? 'window.history.back();' : 'window.location=\''.UI::GetPageUrl(strtolower($str_actionpage)).'\';') . '"> ';
     }
     
     public function EndForm() {
