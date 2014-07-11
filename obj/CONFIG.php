@@ -1,6 +1,8 @@
 <?php
 
-
+/**
+ * Class for CONFIG file (ini) management and processing engine
+ */
 final class CONFIG {
     
     public $path;
@@ -12,6 +14,10 @@ final class CONFIG {
         $this->configdata = array();
     }
     
+    /**
+     * Creates an INI file (virtually)
+     * @param String $path The path of the INI file to be created
+     */
     public function Create($path) {
         $this->path = $path;
     }

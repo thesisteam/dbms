@@ -11,12 +11,6 @@
 
 # Begin coding below
 
-$harhar = 'hello world';
-$key = 'hello ka din haha';
-$value = $harhar & $key;
-echo $value;
 
-$value = $key&$value;
-echo ' decrypted(' . $value . ')';
 
 ?>

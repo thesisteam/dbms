@@ -7,11 +7,18 @@ final class SYS {
     
     /**
      * Associative array of viewable site pages
-     * @var Array(Assoc)
+     * @var Array(assoc)
      */
     static public $PAGES = array();
+    /**
+     * Associative array of sidebar pages
+     * @var Array(assoc)
+     */
+    static public $SIDEBARS = array();
     
-    # ----------------- CONFIGURATION VALUES
+    
+    
+    # ----------------- CONFIGURATION VALUES -----------------
     /**
      * The default INI file for admin info
      * @var String 

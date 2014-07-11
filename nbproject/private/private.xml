@@ -5,26 +5,11 @@
         <group>
             <file>file:/C:/xampp/htdocs/dbms/obj/CONFIG.php</file>
             <file>file:/C:/xampp/htdocs/dbms/page/debug.phtml</file>
-            <file>file:/C:/xampp/htdocs/dbms/config/pages.ini</file>
-            <file>file:/C:/xampp/htdocs/dbms/util/DATA.php</file>
-            <file>file:/C:/xampp/htdocs/dbms/constant/SYS.php</file>
-            <file>file:/C:/xampp/htdocs/dbms/model/ACCOUNTS.php</file>
-            <file>file:/C:/xampp/htdocs/dbms/page/signup.phtml</file>
-            <file>file:/C:/xampp/htdocs/dbms/constant/DIR.php</file>
-            <file>file:/C:/xampp/htdocs/dbms/config/page-titles.ini</file>
-            <file>file:/C:/xampp/htdocs/dbms/page/home.phtml</file>
-            <file>file:/C:/xampp/htdocs/dbms/page/install.php</file>
-            <file>file:/C:/xampp/htdocs/dbms/page/install.phtml</file>
-            <file>file:/C:/xampp/htdocs/dbms/page/_admin/home.phtml</file>
             <file>file:/C:/xampp/htdocs/dbms/util/STR.php</file>
-            <file>file:/C:/xampp/htdocs/dbms/obj/IOSYS.php</file>
-            <file>file:/C:/xampp/htdocs/dbms/page/footer/footer.phtml</file>
-            <file>file:/C:/xampp/htdocs/dbms/sys/FORM.php</file>
-            <file>file:/C:/xampp/htdocs/dbms/util/FLASH.php</file>
-            <file>file:/C:/xampp/htdocs/dbms/page/header/header.phtml</file>
-            <file>file:/C:/xampp/htdocs/dbms/obj/DB.php</file>
-            <file>file:/C:/xampp/htdocs/dbms/sys/indexer.php</file>
+            <file>file:/C:/xampp/htdocs/dbms/util/CMS.php</file>
+            <file>file:/C:/xampp/htdocs/dbms/config/BOX.ini</file>
             <file>file:/C:/xampp/htdocs/dbms/page/debug.php</file>
+            <file>file:/C:/xampp/htdocs/dbms/config/autoload.ini</file>
         </group>
     </open-files>
 </project-private>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<div class="col-lg-4 col-md-4 col-sm-4 main-placeholder">
+    <c class="left">Admin tasks</c>
+    <ul style="list-style: none;margin:0px;">
+        <li><a href="<?php echo UI::GetPageUrl('admin-site-config'); ?>">System configuration</a></li>
+        <li><a href="<?php echo UI::GetPageUrl('admin-manage-courses'); ?>">Manage existing courses</a></li>
+        <li><a href="<?php echo UI::GetPageUrl('admin-pending-registrations'); ?>">Pending user registrations</a>
+            <?php
+            $mysql = new DB();
+            $result = $mysql->Select(['count(*) as "PENDING_COUNT"'])
+                    ->From('user')
+                    ->Where('user.status=2')
+                    ->Query();
+            $pending_count = intval($result[0]['PENDING_COUNT']);
+            if ($pending_count > 0) {
+                echo '('.$pending_count.')';
+            }
+            ?>
+        </li>
+
+    </ul>
+</div>

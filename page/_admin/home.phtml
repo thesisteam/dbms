@@ -2,13 +2,7 @@
     <div class="col-lg-8 col-md-8 col-sm-8 main-placeholder">
         <c class="left">Dashboard</c>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-4 main-placeholder">
-        <c class="left">Admin tasks</c>
-        <ul style="list-style: none;margin:0px;">
-            <li><a href="<?php echo UI::GetPageUrl('admin-site-config'); ?>">System configuration</a></li>
-            <li><a href="<?php echo UI::GetPageUrl('admin-manage-courses'); ?>">Manage existing courses</a></li>
-            <li><a href="<?php echo UI::GetPageUrl('admin-pending-registrations'); ?>">Pending user registrations</a></li>
-            
-        </ul>
-    </div>
+    <?php
+        Index::__IncludeSidebar('admin');
+    ?>
 </div>

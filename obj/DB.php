@@ -6,9 +6,10 @@
 final class DB {
     
     public $query = "";
-    public $lasterror = "";
-    public $lasterrno = null;
-    public $lastprocess = "";
+    public $Lasterror = "";
+    public $Lasterrno = null;
+    public $Lastprocess = "";
+    public $Lastresult = array();
     /**
      *
      * @var mysqli
@@ -96,7 +97,10 @@ final class DB {
      */
     public function __construct() {
         $this->query = "";
-        $this->lastprocess = null;
+        $this->Lasterrno = null;
+        $this->Lasterror = "";
+        $this->Lastprocess = null;
+        $this->Lastresult = array();
         $this->rows_affected = null;
         $this->Connect();
     }
@@ -131,8 +135,8 @@ final class DB {
         }
         $this->__cleanQuery();
         if (!$this->mysqli->query($this->query)) {
-            $this->lasterror = $this->mysqli->error;
-            $this->lasterrno = $this->mysqli->errno;
+            $this->Lasterror = $this->mysqli->error;
+            $this->Lasterrno = $this->mysqli->errno;
         }
         $this->rows_affected = $this->__GetAffectedRows();
         return $this;
@@ -182,10 +186,11 @@ final class DB {
             while ($row = mysqli_fetch_assoc($result)) {
                 array_push($result_object, $row);
             }
+            $this->Lastresult = $result_object;
         } else {
             # FAILURE : Log the last error
-            $this->lasterror = $this->mysqli->error;
-            $this->lasterrno = $this->mysqli->errno;
+            $this->Lasterror = $this->mysqli->error;
+            $this->Lasterrno = $this->mysqli->errno;
         }
         return $result_object;
     }

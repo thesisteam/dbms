@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class as an Index page helper. Useful for index page manipulations.
+ * Page rendering engine for INDEX pages. Useful for index page manipulations.
  */
 final class Index {
    
@@ -33,6 +33,7 @@ final class Index {
         DIR::$HEADER = DIR::$PAGE . 'header/';
         DIR::$FOOTER = DIR::$PAGE . 'footer/';
         SYS::$PAGES = parse_ini_file(DIR::$CONFIG . 'pages.ini');
+        SYS::$SIDEBARS = parse_ini_file(DIR::$CONFIG . 'sidebars.ini');
         
         # Validate the current page action call
         $this->ValidatePage();
@@ -82,6 +83,44 @@ final class Index {
                 SYS::$PAGES[$page] . '.php'
             :   null;
         return $result;
+    }
+    
+    /**
+     * Includes a sidebar component for page rendering
+     * @param String $sidebarname Name of the sidebar component (see keys of 'config/sidebars.ini')
+     * @param Boolean $is_require (Optional) Boolean value if files will be required or not
+     */
+    public static function __IncludeSidebar($sidebarname, $is_require=true) {
+        if (!array_key_exists($sidebarname, SYS::$SIDEBARS)) {
+            echo '<br>Sidebar "'.$sidebarname.'" does not exist!<br>';
+            return;
+        }
+        if ($is_require) {
+            require SYS::$SIDEBARS[$sidebarname].'.php';
+            require SYS::$SIDEBARS[$sidebarname].'.phtml';
+        } else {
+            include SYS::$SIDEBARS[$sidebarname].'.php';
+            include SYS::$SIDEBARS[$sidebarname].'.phtml';
+        }
+    }
+    
+    /**
+     * Includes Miscellaneous files on page rendering
+     * @param String $path Path (no right-trailing slash) containing the files
+     * @param Array $filenames Linear-array containing paths to be included
+     * @param Boolean $is_require (Optional) Boolean value if file should be required or not
+     */
+    public static function __IncludeFiles($path, $filenames, $is_require=true) {
+        # Remove right-trailing slashes
+        $path = rtrim($path, '/');
+        
+        foreach($filenames as $filename) {
+            if ($is_require) {
+                require $path . '/' . $filename;
+            } else {
+                include $path . '/' . $filename;
+            }
+        }
     }
     
     /**
