@@ -20,11 +20,20 @@
 class TABLE {
 
     public $Columnheaders;
-    # [0] => { CAPTION, WIDTH, ALIGN }
+    # [0] => { CAPTION, WIDTH, ALIGN, (...) }
+    
+    /**
+     * Assoc-array of row values/data
+     * @var Array(assoc)
+     */
     public $Rowdata;
-    # [ Cellvalue1, Cellvalue2, Cellvalue3 ]
+    
+    /**
+     * Assoc-array of HTML properties of this {TABLE} element
+     * @var Array(assoc)
+     */
     public $CellsHTMLtemplate;
-    # [0] => { Array of HTML properties of <TD> }
+    
     public $HTMLcss;
     public $HTMLproperties;
 
@@ -82,6 +91,10 @@ class TABLE {
         return $this;
     }
 
+    /**
+     * Render this whole table
+     * @param Boolean $is_boldheaders Boolean value if headers should be BOLDED
+     */
     public function Render($is_boldheaders = true) {
         # ECHO <table (...properties...) 
         // Rendering <table>-properties
