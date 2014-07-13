@@ -40,6 +40,10 @@ class MYSQLREPORT {
         $this->Resultdata = $query_result_data;
     }
     
+    public function __columnCount() {
+        // Put a procedure here that will return column count of `Resultdata`
+    }
+    
     public function loadDb(DB $db) {
         $this->Db = $db;
     }
@@ -48,8 +52,22 @@ class MYSQLREPORT {
         $this->Resultdata = $query_result_data;
     }
     
-    public function renderReport() {
+    public function renderReport($a_tableoptions=array()) {
+        # ECHO <table ... >
+        $str_tableoptions = '';
+        if (count($a_tableoptions) > 0) {
+            do {
+                $str_tableoptions .= key($a_tableoptions) . '="' . current($a_tableoptions) . '" ';
+            } while(next($a_tableoptions));
+        }
+        $str_tableoptions = trim($str_tableoptions);
+        echo '<table ' . $str_tableoptions . '>';
         
+        # ECHO { Column headers }
+        
+        
+        echo '</table>';
+        # ECHO </table>
     }
     
 }

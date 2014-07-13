@@ -47,7 +47,6 @@ final class UI {
         }
         header($redir_string);
     }
-    
 }
 
 ?>

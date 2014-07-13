@@ -42,6 +42,15 @@ final class STR {
         return self::__HasPunct($string, true);
     }
 
+    /**
+     * Format a name 'FirstNAME MiddleINITIAL. LastNAME' into certain formats
+     * @param String $name The name to be processed
+     * @param String $formatmask Use the following:<br>
+     * <ul>
+     * <li></li>
+     * </ul>
+     * @return String The newly masked name
+     */
     public static function FormatName($name, $formatmask) {
         $name = self::RemoveExcessiveSpacing($name);
 

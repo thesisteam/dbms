@@ -3,8 +3,43 @@
 <br>
 <br>
 <?php
-    echo STR::FormatName('Imari Elanor L. Malabanan', 'Welcome %F to this system! Your last name is %L, am I right? :D');
-
+$table = new TABLE();
+$table->setHTMLproperties(array(
+            'cellpadding' => '30',
+            'width' => '80%',
+            'align' => 'center',
+        ))
+        ->setColumnHeaders(array(
+            [
+                'CAPTION' => 'ID',
+                'width' => '20%',
+                'align' => 'center'
+            ],
+            [
+                'CAPTION' => 'Full name',
+                'width' => '40%',
+                'align' => 'left'
+            ],
+            [
+                'CAPTION' => 'Course',
+                'width' => '40%'
+        ]))
+        ->setCellstemplate(array(
+            [
+                'align' => 'center',
+                'style' => 'padding: 5px;'
+            ],
+            [
+                'align' => 'left',
+            ],
+            [], [], []
+        ))
+        ->addRow(['0', 'Allen Linatoc', 'BS Computer Science'])
+        ->addRow(['1', 'Paul Michael Cacatian', 'BS Computer Science'])
+        ->addCommonCells(array(
+            'Haha', 'Haha2'
+        ), false)
+        ->Render();
 ?>
 
 <br>
