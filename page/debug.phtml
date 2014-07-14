@@ -1,46 +1,31 @@
-
-<!-- You can put your HTML outputs here -->
-<br>
-<br>
-<?php
-$table = new TABLE();
-$table->setHTMLproperties(array(
-            'cellpadding' => '30',
-            'width' => '80%',
-            'align' => 'center',
-        ))
-        ->setColumnHeaders(array(
+<div class="container main">
+    <div class="container-fluid main-placeholder">
+        <?php
+        $rptActiveusers = new MYSQLREPORT(array(
             [
-                'CAPTION' => 'ID',
-                'width' => '20%',
-                'align' => 'center'
+                'CAPTION' => 'Username'
             ],
             [
-                'CAPTION' => 'Full name',
-                'width' => '40%',
-                'align' => 'left'
+                'CAPTION' => 'First name'
             ],
             [
-                'CAPTION' => 'Course',
-                'width' => '40%'
-        ]))
-        ->setCellstemplate(array(
-            [
-                'align' => 'center',
-                'style' => 'padding: 5px;'
+                'CAPTION' =>  'Last name'
             ],
             [
-                'align' => 'left',
-            ],
-            [], [], []
-        ))
-        ->addRow(['0', 'Allen Linatoc', 'BS Computer Science'])
-        ->addRow(['1', 'Paul Michael Cacatian', 'BS Computer Science'])
-        ->addCommonCells(array(
-            'Haha', 'Haha2'
-        ), false)
-        ->Render();
-?>
-
-<br>
-<br>
+                'CAPTION' => 'Email'
+            ]
+        ));
+        $rptActiveusers->setReportProperties(array(
+            'width' => '100%',
+            'border' => '1'
+        ))->setReportCellstemplate(array(
+            [], [], [], []
+        ));
+        
+        $rptActiveusers->loadResultdata(
+                ACCOUNTS::getActiveUsers(['username', 'fname', 'lname', 'email'], true)
+                );
+        $rptActiveusers->renderReport();
+        ?>
+    </div>
+</div>

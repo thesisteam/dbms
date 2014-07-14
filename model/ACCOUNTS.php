@@ -158,4 +158,38 @@ final class ACCOUNTS {
         return true;
     }
     
+    
+    # ACCOUNT DATA Fetching methods --------------------------------------------
+    
+    /**
+     * Returns a QueryResult (Assoc-array) of Active users
+     * @param Array $a_fields (Optional) Array of user fields to be selected
+     * @param Boolean $is_includeprofile (Optional) Boolean value if profile
+     *      of each user should also be included
+     * @return Array(assoc)
+     */
+    public static function getActiveUsers($a_fields = array(), $is_includeprofile=false) {
+        $db = new DB();
+        $db->Select($a_fields)
+                ->From('user' . ($is_includeprofile ? ', profile' : '') )
+                ->Where('user.status = 0 AND '
+                        . 'user.id=profile.user_id');
+        return $db->Query();
+    }
+    
+    /**
+     * Returns a QueryResult (Assoc-array) of pending-for-signup users
+     * @param Array(assoc) $a_fields (Optional) Userfields to be selected
+     * @param Boolean $is_includeprofile (Optional) Boolean value if profile
+     *      of each user should also be included
+     * @return Array(assoc)
+     */
+    public static function getPendingUsers($a_fields = array(), $is_includeprofile=false) {
+        $db = new DB();
+        $db->Select($a_fields)
+                ->From('user' . ($is_includeprofile ? ', profile' : ''))
+                ->Where('status=2');
+        return $db->Query();
+    }
+    
 }

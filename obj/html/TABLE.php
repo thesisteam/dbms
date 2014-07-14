@@ -138,7 +138,6 @@ class TABLE {
                 # Looping CELLs per ROW
                 $x = 0;
                 foreach ($row as $cellvalue) {
-;
 
                     // Preparing <td> HTML options
                     $td_options = '';
@@ -177,6 +176,9 @@ class TABLE {
                 echo '<td ';
                 if (count($columnHeader) > 0) {
                     do {
+                        if (strtoupper(key($columnHeader))=='CAPTION') {
+                            continue;
+                        }
                         $td_properties .= key($columnHeader) . '="' . current($columnHeader) . '" ';
                     } while (next($columnHeader));
                 }
