@@ -30,6 +30,17 @@ final class UI {
             return '?page=no-page';
         }
     }
+    
+    public static function makeNavigationLink($text, $url, $str_disable_onpage='', $starttag='<b>', $endtag='</b>') {
+        echo PHP_EOL;
+        echo strtolower(Index::__GetPage())!=strtolower($str_disable_onpage) ?
+            '<a href="' . $url . '">'
+          : $starttag;
+        echo $text;
+        echo strtoupper(Index::__GetPage())!=strtoupper($str_disable_onpage) ?
+            '</a>'
+          : $endtag;
+    }
 
     /**
      * Redirects the user to certain page in this site

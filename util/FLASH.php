@@ -40,6 +40,7 @@ class FLASH {
     /**
      * Adds a flash message to current flash contents.
      * @param String $flash The flash message you want to add
+     * @param String $target_page Page where this Flash is dedicated
      * @param String $type The type of message, could be "PROMPT" or "ERROR" (or "EMPTY")
      * @param boolean $is_clearfirst Optional boolean value if existing flashes should be truncated first.
      */
@@ -86,7 +87,7 @@ class FLASH {
      * @param Array(Assoc) $a_msg_condition Format>> [ERROR_MESSAGE] => [BOOLEAN_CONDITION]
      * @param String $success_message The success message once all errors didn't exist
      * @param String $success_page The redirection page when success
-     * @param String $success_page The redirection page when error
+     * @param String $error_page The redirection page when error
      * @param Boolean $is_clearfirst Boolean value if existing flashes shoud be cleared first
      */
     public static function checkAndAdd($a_msg_condition, $success_message, $success_page, $error_page, $is_clearfirst = false) {

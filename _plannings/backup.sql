@@ -33,10 +33,10 @@ DROP TABLE IF EXISTS `dbass`.`user` ;
 CREATE TABLE IF NOT EXISTS `dbass`.`user` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(20) NOT NULL,
-  `password` VARCHAR(150) NOT NULL,
+  `password` VARCHAR(450) NOT NULL,
   `email` VARCHAR(60) NOT NULL,
-  `secquestion` VARCHAR(375) NOT NULL,
-  `secanswer` VARCHAR(150) NOT NULL,
+  `secquestion` VARCHAR(1125) NOT NULL,
+  `secanswer` VARCHAR(450) NOT NULL,
   `status` INT UNSIGNED NOT NULL COMMENT 'Given value of account status' /* comment truncated */ /*0 = Active
 1 = Inactive
 2 = Pending*/,

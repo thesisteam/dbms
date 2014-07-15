@@ -1,6 +1,16 @@
 <?php
 
+if (DATA::__HasPostData()) {
+    $postUsername = DATA::__GetPOST('postUsername', true, true, true);
+    $postPassword = DATA::__GetPOST('postPassword', true, true);
+    FLASH::checkAndAdd(array(
+        'Username should only contain letters and numbers' => ctype_punct($postUsername) || ctype_space($postUsername)
+    ), 'Validation success! Developers should add data redirection in this :D', 
+            Index::__GetPage(), Index::__GetPage(), true);
 
-
+    if (FLASH::_getType()=='PROMPT') {
+        
+    }
+}
 
 ?>
