@@ -199,7 +199,7 @@ final class Index {
 		// Render BODY
 		include self::__GetScriptfile ( $page );
 		// Include flashes
-		FLASH::Initialize ();
+		FLASH::Initialize();
 		include self::__GetPagefile ( $page );
 		
 		// Render FOOTER

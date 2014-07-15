@@ -20,7 +20,7 @@
 class TABLE {
 
     public $Columnheaders;
-    # [0] => { CAPTION, WIDTH, ALIGN, (...) }
+    # [0] => { CAPTION, COLUMN_TYPE, ALIGN, (...) }
     
     /**
      * Assoc-array of row values/data
@@ -176,7 +176,8 @@ class TABLE {
                 echo '<td ';
                 if (count($columnHeader) > 0) {
                     do {
-                        if (strtoupper(key($columnHeader))=='CAPTION') {
+                        $key = strtoupper(key($columnHeader));
+                        if ($key=='CAPTION' || $key=='C_TYPE' || 'C_') {
                             continue;
                         }
                         $td_properties .= key($columnHeader) . '="' . current($columnHeader) . '" ';
@@ -197,7 +198,8 @@ class TABLE {
      *  with format:<br>
      * { <br>
      * <b>"CAPTION" =>"Caption1"</b>, <br>
-     * <b>"WIDTH" => "10%"</b>, <br>
+     * <b>"C_TYPE" => "TEXT|CHECKBOX|"</b>, <br>
+     * <b>"C_OBJNAME" => "TEXT|CHECKBOX|"</b>, <br>
      * "ALIGN" = "left"<br>
      * }
      * @return TABLE New instance

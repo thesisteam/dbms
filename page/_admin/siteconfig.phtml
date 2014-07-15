@@ -1,1 +1,24 @@
-Site configuration here
+<div class="container main">
+    <div class="col-lg-8 col-md-8 col-sm-8 main-placeholder">
+        <c class="left">System configuration</c>
+        <?php
+            $form = new FORM('frmSystemconfig', 'post', '', '');
+            echo '<i>You can enable/disable the whole system.</i><br><br>';
+            $form->AddDropdown('System availability', 'postSystemavailability', 
+                    array(
+                        'Enabled' => 'true',
+                        'Disabled' => 'false'
+                    ), array(), 'REQUIRED');
+            UI::HorizontalLine();
+            $form->AddDropdown('User registration', 'postUserregistration', 
+                    array(
+                        'Enabled' => 'true',
+                        'Disabled' => 'false'
+                    ), array(), 'REQUIRED');
+            $form->EndForm();
+        ?>
+    </div>
+    <?php
+        Index::__IncludeSidebar('admin');
+    ?>
+</div>

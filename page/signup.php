@@ -6,7 +6,7 @@ $postEmail = strtolower(DATA::__GetPOST('postEmail', true, true));
 $postBirthday = DATA::__GetPOST('postBirthday', false, true);
 
 if (Index::__HasPostData()) {
-    # Check for username existence
+    # Data validation
     FLASH::checkAndAdd(array(
         "Username already exists." => ACCOUNTS::Exists(array('username' => $postUsername)),
         "Passwords verification didn't match, please check again." => DATA::__GetPOST('postPass1') != DATA::__GetPOST('postPass2'),

@@ -2,7 +2,7 @@
 /**
  * Renders bootstrap-oriented forms
  */
-final class FORM {
+class FORM {
     
     /**
      * 
@@ -13,13 +13,6 @@ final class FORM {
      * @param String $align Alignment of the form
      */
     public function __construct($name, $method, $action, $class, $align="left") {
-        /*
-        do {
-            echo strtolower(str_replace(" ", "", key($options))) . '="' . current($options) . '" ';
-        } while (next($options));
-        echo '>' . $label . '</label>';
-        if ($this->is_bootstrap) echo '</div>';
-         */
         echo '<div class="container-fluid '.$class.'" align="'.$align.'">';
         echo '<form name="'.$name.'" method="'.$method.'" action="' . $action . '" class="form" role="form">';
     }
@@ -35,7 +28,7 @@ final class FORM {
      * @param Boolean $is_fullwidth Set if this element's width should be 100%
      * @param String $input_class Input's additional CSS class
      */
-    public function AddInput($label, $name, $type, $options=array(), $scheme="DEFAULT", $tooltip=null, $is_fullwidth=false, $input_class = "") {
+    public function AddInput($label, $name, $type, $options=array(), $scheme="DEFAULT", $tooltip=null, $is_fullwidth=false, $input_class = "", $initial_value = "") {
         # <input> ID, SCHEME, <label> initializations
         $input_id = strtolower(str_replace(" ", "", $name));
         $scheme = strtoupper($scheme);
@@ -49,9 +42,12 @@ final class FORM {
         # <input> printing
         echo '<input type="' . $type . '" name="' . $name . '" class="form-control' . (!$is_fullwidth ? '-free ':' ') . $input_class . '" id="' . $input_id . '" ';
         # -- check for existing POST data and set value if exist
-        if(Index::__HasPostData($name) /* Check if password field */ && trim(strtolower($type))!='password') {
-            echo 'value="' . DATA::__GetPOST($name, false, true) . '" ';
-        }
+            echo 'value="' . 
+                    (Index::__HasPostData($name) /* Check if password field */ 
+                        && trim(strtolower($type))!='password') ? 
+                            DATA::__GetPOST($name, false, true) 
+                          : $initial_value . '" ';
+            
         # -- check for optional attributes ($options) and add each if exist
         do {
             echo strtolower(str_replace(" ", "", key($options))) . '="' . current($options) . '" ';

@@ -3,14 +3,16 @@
         <?php
         $rptActiveusers = new MYSQLREPORT(array(
             [
-                'CAPTION' => 'Username',
+                'CAPTION' => '',
+                'C_TYPE' => 'CHECKBOX',
+                'C_OBJNAME' => 'a_id',
                 'style' => 'padding: 10px'
             ],
             [
-                'CAPTION' => 'First name'
+                'CAPTION' => 'Username'
             ],
             [
-                'CAPTION' =>  'Last name'
+                'CAPTION' =>  'Name'
             ],
             [
                 'CAPTION' => 'Email'
@@ -20,13 +22,16 @@
             'width' => '100%',
             'border' => '1'
         ))->setReportCellstemplate(array(
-            [], [], [], []
+            [
+                'style' => 'padding: 5px'
+            ], [], [], []
         ));
         
         $rptActiveusers->loadResultdata(
-                ACCOUNTS::getActiveUsers(['username', 'fname', 'lname', 'email'], true)
+                ACCOUNTS::getActiveUsers(['user.id', 'username', 'concat(fname, \' \', lname)', 'email'], true)
                 );
-        $rptActiveusers->renderReport();
+        $rptActiveusers->renderReport(true);
         ?>
+        <br>
     </div>
 </div>

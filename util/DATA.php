@@ -13,6 +13,9 @@
  */
 final class DATA {
     
+    private static $SESS_DATALOCK_TIME = 'emit_kcolatad';
+    private static $SESS_DATALOCK_KEY = '_yek_kcolatad';
+    
     /**
      * Extracts certain value from a specified $_POST data, otherwise, returns null
      * @param Array(Assoc) $POST_DATA Source $_POST data
@@ -37,6 +40,18 @@ final class DATA {
             $data = $is_tolower ? strtolower($data) : strtoupper($data);
         }
         return $data;
+    }
+    
+    /**
+     * Generate a random hash string
+     * @param int $length (Optional) The length of the hash, max of 32
+     * @param int $timestamp (Optional) If SUPPLIED, random hash will be generated
+     *      based on this value
+     * @return String
+     */
+    public static function __GenerateRandomhash($length=32, $timestamp=null) {
+        $timehash = (is_null($timestamp) ? time() : $timestamp);
+        return substr(md5($timehash), 0, $length);
     }
     
     /**
@@ -93,6 +108,25 @@ final class DATA {
         $date = str_replace('%d', $day, $date);
         $date = str_replace('%Y', $year, $date);
         return $date;
+    }
+    
+    public static function __IsPassageOpen() {
+        if (!isset($_SESSION[self::$SESS_DATALOCK_KEY]) || !isset($_SESSION[self::$SESS_DATALOCK_TIME])) {
+            return false;
+        }
+        $sessTime = $_SESSION[self::$SESS_DATALOCK_TIME];
+        $sessHash = $_SESSION[self::$SESS_DATALOCK_KEY];
+        return self::__GenerateRandomhash(32, $sessTime) == $sessHash;
+    }
+    
+    public static function closePassage() {
+        unset($_SESSION[self::$SESS_DATALOCK_TIME]);
+        unset($_SESSION[self::$SESS_DATALOCK_KEY]);
+    }
+    
+    public static function openPassage() {
+        $_SESSION[self::$SESS_DATALOCK_TIME] = time();
+        $_SESSION[self::$SESS_DATALOCK_KEY] = self::__GenerateRandomhash();
     }
     
 }

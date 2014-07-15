@@ -188,7 +188,8 @@ final class ACCOUNTS {
         $db = new DB();
         $db->Select($a_fields)
                 ->From('user' . ($is_includeprofile ? ', profile' : ''))
-                ->Where('status=2');
+                ->Where('status=2 AND '
+                        . 'user.id = profile.user_id');
         return $db->Query();
     }
     

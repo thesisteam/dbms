@@ -9,7 +9,7 @@
 
 # Data processing for pending users --------------------------------------------
 $a_pendingusers = ACCOUNTS::getPendingUsers([
-    'id', 'username', 'fname', 'lname', 'userpower_id' ], true);
+    'user.id', 'username', 'fname', 'lname' ], true);
 $rptPendingusers = new MYSQLREPORT(array(
     [
         'CAPTION' => 'ID',
@@ -27,9 +27,6 @@ $rptPendingusers = new MYSQLREPORT(array(
     [
         'CAPTION' => 'Lastname',
         'width' => '23%'
-    ],
-    [
-        'CAPTION' => 'Userpower'
     ]
 ));
 
