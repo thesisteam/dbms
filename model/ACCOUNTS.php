@@ -12,24 +12,58 @@
  * @author Allen
  */
 final class ACCOUNTS {
-    
+
+    /**
+     * Authenticate login details and return login result
+     * @param String $username Raw username
+     * @param String $password Raw(unencrypted) password
+     * @return Array(assoc) Assoc-array of results containing:<br>
+     * <ul>
+     * <li>'IS_SUCCESS'</li>
+     * <li>'USERTYPE'</li>
+     * <li>'USERNAME'</li>
+     * </ul>
+     */
     public static function Authenticate($username, $password) {
         $result = array(
             'IS_SUCCESS' => false,
             'USERTYPE' => null,
             'USERNAME' => $username
         );
-        
+
         # Encrypt first the credential
         $auth_password = ACCOUNTS::Encryptor($password, 'ENCRYPT');
-        
+
         # Authenticate with Admin flatfile first
         $admincredentials = parse_ini_file(DIR::$CONFIG . 'admin.ini');
-        if ($username==$admincredentials['username'] && $auth_password==$admincredentials['password']
-                && $password==ACCOUNTS::Encryptor($admincredentials['password'], 'DECRYPT')) {
+        if ($username == $admincredentials['username'] && $auth_password == $admincredentials['password'] && $password == ACCOUNTS::Encryptor($admincredentials['password'], 'DECRYPT')) {
             $result['IS_SUCCESS'] = true;
-            $result['USERTYPE'] = '';
+            $result['USERTYPE'] = 'SUPERADMIN';
+            $result['USERNAME'] = $admincredentials['username'];
+        } else {
+            # Else, authenticate with User database
+            $db = new DB();
+            $db->Select()->
+                    From('user, userpower')->
+                    Where('username="' . $username . '" AND '
+                            . 'password="' . $auth_password . '" AND '
+                            . 'user.userpower_id=userpower.id');
+            $dbresult = $db->Query();
+            if (count($dbresult) > 0) {
+                if ($dbresult['username'] == $username && $dbresult['password'] == $auth_password) {
+                    $result['IS_SUCCESS'] = true;
+                    $result['USERTYPE'] = strtoupper($dbresult['userpower.label']);
+                    $result['USERNAME'] = $dbresult['username'];
+                }
+            }
         }
+        # If Authentication is SUCCESS, log to the user credential session
+        USER::Setmany(array(
+            USER::USERNAME => $username,
+            USER::PASSWORD => $auth_password,
+            USER::TYPE => $result['USERTYPE']
+        ));
+        return $result;
     }
 
     /**
@@ -136,9 +170,9 @@ final class ACCOUNTS {
         if ($mode == 'ENCRYPT') {
             $encrypted = base64_encode(
                     bin2hex(
-                        strrev(
-                            base64_encode(
-                               bin2hex($data)))));
+                            strrev(
+                                    base64_encode(
+                                            bin2hex($data)))));
             return $encrypted;
         } else {
             $decrypted = hex2bin(base64_decode(strrev(hex2bin(base64_decode($data)))));

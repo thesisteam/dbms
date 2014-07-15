@@ -13,23 +13,24 @@
  */
 final class USER {
     
+    static $ADMIN_LANDPAGE = 'admin-home';
+    static $USER_LANDPAGE = 'user-home';
+    
     const _USER_CREDENTIALS_MAIN_KEY = 'ass_user_credentials';
     const USERNAME = 'uc_username';
     const PASSWORD = 'uc_password';
-    const LASTLOGIN = 'uc_lastlogin';
-    const LASTLOGOUT = 'uc_lastlogout';
+    const TYPE = 'uc_usertype';
     
     /**
      * Initializes the User credential session<br>
      * Does nothing if credential already exists
      */
-    public static function InitSession($reset_values=false) {
-        if (!key_exists(self::_USER_CREDENTIALS_MAIN_KEY, $_SESSION) || $reset_values) {
+    public static function InitSession($is_resetvalues=false) {
+        if (!key_exists(self::_USER_CREDENTIALS_MAIN_KEY, $_SESSION) || $is_resetvalues) {
             $_SESSION[self::_USER_CREDENTIALS_MAIN_KEY] = array(
                 self::USERNAME => null,
                 self::PASSWORD => null,
-                self::LASTLOGIN => null,
-                self::LASTLOGOUT => null
+                self::TYPE => null
             );
         }
     }
@@ -50,7 +51,27 @@ final class USER {
      */
     public static function Get($uc_key) {
         self::InitSession();
-        return $_SESSION[self::_USER_CREDENTIALS_MAIN_KEY][$uc_key];
+        return key_exists($uc_key, $_SESSION[self::_USER_CREDENTIALS_MAIN_KEY]) ?
+                $_SESSION[self::_USER_CREDENTIALS_MAIN_KEY][$uc_key]
+              : null;
+    }
+    
+    /**
+     * Return the Landing homepage(pagename) of the current user
+     * @return String
+     */
+    public static function GetLandpage() {
+        self::InitSession();
+        # If current session is null
+        # --- make 'HOMEPAGE' the landpage
+        if (is_null(self::Get(self::TYPE))) {
+            return Index::$DEFAULT_PAGE;
+        }
+        
+        $type = strtoupper(self::Get(self::TYPE));
+        return (strstr($type, 'ADMIN')) ?
+                self::$ADMIN_LANDPAGE
+              : self::$USER_LANDPAGE;
     }
     
     /**
@@ -64,10 +85,23 @@ final class USER {
      * Set the value of a user credential key
      * @param String $uc_key The user credential key
      * @param String $value The value to be assigned to the 'user credential key'
+     * @return Array(assoc) The new user credential session data
      */
     public static function Set($uc_key, $value) {
         self::InitSession();
         $_SESSION[self::_USER_CREDENTIALS_MAIN_KEY][$uc_key] = $value;
+        return $_SESSION[self::_USER_CREDENTIALS_MAIN_KEY];
+    }
+    
+    /**
+     * Set values of multiple credential keys
+     * @param Array(assoc) $a_uc_keys_values Assoc-array of KEYS and VALUES
+     * @return Array(assoc) The new user credential session data
+     */
+    public static function Setmany($a_uc_keys_values, $is_resetvalues=false) {
+        self::InitSession($is_resetvalues);
+        $_SESSION[self::_USER_CREDENTIALS_MAIN_KEY] = $a_uc_keys_values;
+        return $_SESSION[self::_USER_CREDENTIALS_MAIN_KEY];
     }
     
 }
