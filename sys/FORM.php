@@ -4,6 +4,8 @@
  */
 class FORM {
     
+    public $is_editform;
+    
     /**
      * 
      * @param String $name
@@ -12,9 +14,13 @@ class FORM {
      * @param String $class The class for this form's parent container
      * @param String $align Alignment of the form
      */
-    public function __construct($name, $method, $action, $class, $align="left") {
+    public function __construct($name, $method, $action, $class, $align="left", $is_editform=false) {
         echo '<div class="container-fluid '.$class.'" align="'.$align.'">';
         echo '<form name="'.$name.'" method="'.$method.'" action="' . $action . '" class="form" role="form">';
+        $this->is_editform = $is_editform;
+        if ($this->is_editform) {
+            DATA::openPassage();
+        }
     }
     
     /**
@@ -120,6 +126,12 @@ class FORM {
     
     public function EndForm() {
         echo '</form></div>';
+    }
+    
+    # Private functions --------------------------------------------------------
+    
+    private function __getAvailableValue() {
+        
     }
     
 }

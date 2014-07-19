@@ -33,7 +33,6 @@ final class ACCOUNTS {
 
         # Encrypt first the credential
         $auth_password = ACCOUNTS::Encryptor($password, 'ENCRYPT');
-
         # Authenticate with Admin flatfile first
         $admincredentials = parse_ini_file(DIR::$CONFIG . 'admin.ini');
         if ($username == $admincredentials['username'] && $auth_password == $admincredentials['password'] && $password == ACCOUNTS::Encryptor($admincredentials['password'], 'DECRYPT')) {
@@ -79,8 +78,7 @@ final class ACCOUNTS {
         $postSecanswer = self::Encryptor(DATA::__GetPOST('postSecanswer', true, true), "ENCRYPT");
 
         $mysql = new DB();
-
-        return $mysql->InsertInto('user', array(
+        $mysql->InsertInto('user', array(
                     'username', 'password', 'email', 'secquestion', 'secanswer', 'status', 'is_online', 'userpower_id'
                 ))->Values(array(
                     '"' . strtolower(DATA::__GetPOST('postUsername', true, true)) . '"',
@@ -91,7 +89,8 @@ final class ACCOUNTS {
                     2,
                     0,
                     DATA::__GetPOST('postType')
-                ))->Execute()->rows_affected > 0;
+                ));
+        return $mysql->Execute()->rows_affected > 0;
     }
 
     /**
@@ -168,14 +167,14 @@ final class ACCOUNTS {
     public static function Encryptor($data, $str_mode) {
         $mode = strtoupper($str_mode);
         if ($mode == 'ENCRYPT') {
-            $encrypted = base64_encode(
+            $encrypted = bin2hex(base64_encode(
                     bin2hex(
                             strrev(
                                     base64_encode(
-                                            bin2hex($data)))));
+                                            bin2hex($data))))));
             return $encrypted;
         } else {
-            $decrypted = hex2bin(base64_decode(strrev(hex2bin(base64_decode($data)))));
+            $decrypted = hex2bin(base64_decode(strrev(hex2bin(base64_decode(hex2bin($data))))));
             return $decrypted;
         }
     }

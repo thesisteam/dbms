@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `dbass`.`gschemecomponent` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC),
   INDEX `fk_gscheme_id_idx` (`gscheme_id` ASC),
-  CONSTRAINT `fk_gscheme_id`
+  CONSTRAINT `fk_gschemecomponent_gscheme_id`
     FOREIGN KEY (`gscheme_id`)
     REFERENCES `dbass`.`gscheme` (`id`)
     ON DELETE CASCADE
@@ -297,12 +297,12 @@ CREATE TABLE IF NOT EXISTS `dbass`.`d_gscheme_course` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `course_id_UNIQUE` (`course_id` ASC),
   INDEX `fk_course_id_idx` (`gscheme_id` ASC),
-  CONSTRAINT `fk_gscheme_id`
+  CONSTRAINT `fk_gschemecourse_gscheme_id`
     FOREIGN KEY (`gscheme_id`)
     REFERENCES `dbass`.`gscheme` (`id`)
     ON DELETE RESTRICT
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_course_id`
+  CONSTRAINT `fk_gschemecourse_course_id`
     FOREIGN KEY (`course_id`)
     REFERENCES `dbass`.`course` (`id`)
     ON DELETE CASCADE
@@ -334,18 +334,19 @@ CREATE TABLE IF NOT EXISTS `dbass`.`d_course_gperiod` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `course_id` INT UNSIGNED NOT NULL,
   `gperiod_id` INT UNSIGNED NOT NULL,
+  `notes` LONGTEXT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_course_id_idx` (`course_id` ASC),
   INDEX `fk_gperiod_id_idx` (`gperiod_id` ASC),
-  CONSTRAINT `fk_course_id`
+  CONSTRAINT `fk_coursegperiod_course_id`
     FOREIGN KEY (`course_id`)
     REFERENCES `dbass`.`course` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_gperiod_id`
+  CONSTRAINT `fk_coursegperiod_gperiod_id`
     FOREIGN KEY (`gperiod_id`)
     REFERENCES `dbass`.`gperiod` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 AUTO_INCREMENT = 1
@@ -371,22 +372,22 @@ CREATE TABLE IF NOT EXISTS `dbass`.`recordpoint` (
   INDEX `fk_student_id_idx` (`student_id` ASC),
   INDEX `fk_gschemecomponent_id_idx` (`gschemecomponent_id` ASC),
   INDEX `fk_d_course_gperiod_id_idx` (`period_id` ASC),
-  CONSTRAINT `fk_course_id`
+  CONSTRAINT `fk_recordpoint_course_id`
     FOREIGN KEY (`course_id`)
     REFERENCES `dbass`.`course` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_student_id`
+  CONSTRAINT `fk_recordpoint_student_id`
     FOREIGN KEY (`student_id`)
     REFERENCES `dbass`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_gschemecomponent_id`
+  CONSTRAINT `fk_recordpoint_gschemecomponent_id`
     FOREIGN KEY (`gschemecomponent_id`)
     REFERENCES `dbass`.`gschemecomponent` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_d_course_gperiod_id`
+  CONSTRAINT `fk_recoirdpoint_d_course_gperiod_id`
     FOREIGN KEY (`period_id`)
     REFERENCES `dbass`.`d_course_gperiod` (`id`)
     ON DELETE NO ACTION
@@ -410,12 +411,12 @@ CREATE TABLE IF NOT EXISTS `dbass`.`thread` (
   PRIMARY KEY (`id`),
   INDEX `fk_course_id_idx` (`course_id` ASC),
   INDEX `fk_user_id_idx` (`author_id` ASC),
-  CONSTRAINT `fk_course_id`
+  CONSTRAINT `fk_thread_course_id`
     FOREIGN KEY (`course_id`)
     REFERENCES `dbass`.`course` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_user_id`
+  CONSTRAINT `fk_thread_user_id`
     FOREIGN KEY (`author_id`)
     REFERENCES `dbass`.`user` (`id`)
     ON DELETE CASCADE
@@ -438,12 +439,12 @@ CREATE TABLE IF NOT EXISTS `dbass`.`threadcomment` (
   PRIMARY KEY (`id`),
   INDEX `fk_thread_id_idx` (`thread_id` ASC),
   INDEX `fk_user_id_idx` (`author_id` ASC),
-  CONSTRAINT `fk_thread_id`
+  CONSTRAINT `fk_threadcomment_thread_id`
     FOREIGN KEY (`thread_id`)
     REFERENCES `dbass`.`thread` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_user_id`
+  CONSTRAINT `fk_threadcomment_user_id`
     FOREIGN KEY (`author_id`)
     REFERENCES `dbass`.`user` (`id`)
     ON DELETE NO ACTION
@@ -464,7 +465,7 @@ CREATE TABLE IF NOT EXISTS `dbass`.`coursesched` (
   `notes` LONGTEXT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_course_id_idx` (`course_id` ASC),
-  CONSTRAINT `fk_course_id`
+  CONSTRAINT `fk_coursesched_course_id`
     FOREIGN KEY (`course_id`)
     REFERENCES `dbass`.`course` (`id`)
     ON DELETE NO ACTION
@@ -487,12 +488,12 @@ CREATE TABLE IF NOT EXISTS `dbass`.`task` (
   PRIMARY KEY (`id`),
   INDEX `fk_course_id_idx` (`course_id` ASC),
   INDEX `fk_period_id_idx` (`period_id` ASC),
-  CONSTRAINT `fk_course_id`
+  CONSTRAINT `fk_task_course_id`
     FOREIGN KEY (`course_id`)
     REFERENCES `dbass`.`course` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_period_id`
+  CONSTRAINT `fk_task_period_id`
     FOREIGN KEY (`period_id`)
     REFERENCES `dbass`.`d_course_gperiod` (`id`)
     ON DELETE NO ACTION
@@ -516,12 +517,12 @@ CREATE TABLE IF NOT EXISTS `dbass`.`taskattachment` (
   PRIMARY KEY (`id`),
   INDEX `fk_user_id_idx` (`user_id` ASC),
   INDEX `fk_task_id_idx` (`task_id` ASC),
-  CONSTRAINT `fk_user_id`
+  CONSTRAINT `fk_taskattachment_user_id`
     FOREIGN KEY (`user_id`)
     REFERENCES `dbass`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_task_id`
+  CONSTRAINT `fk_taskattachment_task_id`
     FOREIGN KEY (`task_id`)
     REFERENCES `dbass`.`task` (`id`)
     ON DELETE NO ACTION

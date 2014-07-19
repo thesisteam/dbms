@@ -1,5 +1,9 @@
 <?php
 
+if (USER::IsLoggedin()) {
+    UI::RedirectTo(User::GetLandpage());
+}
+
 if (DATA::__HasPostData()) {
     $postUsername = DATA::__GetPOST('postUsername', true, true, true);
     $postPassword = DATA::__GetPOST('postPassword', true, true);
@@ -11,6 +15,7 @@ if (DATA::__HasPostData()) {
     if (FLASH::_getType() == 'PROMPT') {
         $auth_result = ACCOUNTS::Authenticate($postUsername, $postPassword);
         if ($auth_result['IS_SUCCESS']) {
+            # If AUTHENTICATION is success
             UI::RedirectTo(USER::GetLandpage());
         }
         else {

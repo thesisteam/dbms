@@ -2,12 +2,15 @@
     <div class="col-lg-8 col-md-8 col-sm-8 main-placeholder">
         <c class="left">Dashboard</c>
             <?php
+            require_once DIR::$PAGE . '_admin/includes/headcontrols.phtml';
+            ?>
+            <?php
             if (count($a_pendingusers) > 0) {
                 echo '<div class="container">';
                 echo '<c class="mid">You got ' . count($a_pendingusers) . ' pending users</c>';
                 $a_list_userdata = array();
                 $count = 0;
-                foreach($a_pendingusers as $user) {
+                foreach ($a_pendingusers as $user) {
                     # Limit visible pending users to MAX of 5
                     if ($count > 5) {
                         break;

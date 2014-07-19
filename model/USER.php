@@ -75,6 +75,24 @@ final class USER {
     }
     
     /**
+     * 
+     * @return type
+     */
+    public static function IsAdmin() {
+        self::InitSession();
+        $type = strtoupper(self::Get(self::TYPE));
+        return !(!strstr($type, 'ADMIN'));
+    }
+    
+    public static function IsLoggedin() {
+        return self::IsAdmin() || self::IsUser();
+    }
+    
+    public static function IsUser() {
+        return (!self::IsAdmin() && !is_null(self::Get(self::USERNAME)));
+    }
+    
+    /**
      * Reset the user credential session data
      */
     public static function ResetSession() {
