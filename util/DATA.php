@@ -55,6 +55,31 @@ final class DATA {
     }
     
     /**
+     * Gets data from specified GET data key, otherwise, returns null
+     * @param String $datakey The key of data to be fetched from $_GET
+     * @param Boolean $is_trimspaces Boolean value whether left-right trailing spaces should be trimmed out
+     * @param Boolean $is_striphtml Boolean value whether HTML tags should be stripped out
+     * @param Boolean|null $is_tolower True will make LowerCase, otherwise, UpperCase, NULL makes it do nothing
+     * @return Mixed|null
+     */
+    public static function __GetGET($datakey, $is_trimspaces=false, $is_striphtml=false, $is_tolower=null) {
+        if (!array_key_exists($datakey, $_GET)) {
+            return null;
+        }
+        $data = $_GET[$datakey];
+        if ($is_striphtml) {
+            $data = strip_tags($data);
+        }
+        if ($is_trimspaces) {
+            $data = trim($data);
+        }
+        if (!is_null($is_tolower)) {
+            $data = $is_tolower ? strtolower($data) : strtoupper($data);
+        }
+        return $data;
+    }
+    
+    /**
      * Gets data from specified POST data key, otherwise, returns null
      * @param String $datakey The key of data to be fetched from $_POST
      * @param Boolean $is_trimspaces Boolean value whether left-right trailing spaces should be trimmed out
@@ -110,6 +135,10 @@ final class DATA {
         return $date;
     }
     
+    /**
+     * Returns a boolean value whether the GET passage gate is open or not
+     * @return boolean Boolean value if the GET passage gate is open or not
+     */
     public static function __IsPassageOpen() {
         if (!isset($_SESSION[self::$SESS_DATALOCK_KEY]) || !isset($_SESSION[self::$SESS_DATALOCK_TIME])) {
             return false;
@@ -119,14 +148,67 @@ final class DATA {
         return self::__GenerateRandomhash(32, $sessTime) == $sessHash;
     }
     
-    public static function closePassage() {
+    /**
+     * Close all intent passages<br>
+     * This is useful when you want to invalidate all programmer-defined GET values
+     */
+    public static function closePassage($is_clearintents=true) {
         unset($_SESSION[self::$SESS_DATALOCK_TIME]);
         unset($_SESSION[self::$SESS_DATALOCK_KEY]);
+        if ($is_clearintents && (count($_SESSION) > 0)) {
+            $ctr = 0;
+            do {
+                if (strstr(key($_SESSION), "intent_")) {
+                    unset($_SESSION[key($_SESSION)]);
+                } next($_SESSION);
+                $ctr++;
+            } while($ctr < count($_SESSION));
+            reset($_SESSION);
+        }
     }
     
+    /**
+     * Open all GET method passages<br>
+     * This is useful when you want to allow all programmer-defined GET values
+     */
     public static function openPassage() {
         $_SESSION[self::$SESS_DATALOCK_TIME] = time();
         $_SESSION[self::$SESS_DATALOCK_KEY] = self::__GenerateRandomhash();
+    }
+    
+    /**
+     * Returns certain value from existing intent, otherwise, returns NULL
+     * @param String $intentname The intent name
+     * @return Mixed|null
+     */
+    public static function __GetIntent($intentname) {
+        if (!array_key_exists("intent_" . $intentname, $_SESSION)) {
+            return null;
+        }
+        return $_SESSION["intent_" . $intentname];
+    }
+    
+    /**
+     * Create a value for certain intent
+     * @param String $intentname The intent name
+     * @param Mixed $value The value of the intent
+     */
+    public static function CreateIntent($intentname, $value) {
+        $_SESSION["intent_" . $intentname] = $value;
+    }
+    
+    /**
+     * Delete an entire intent
+     * @param String $intentname Name of the intent to be deleted/disposed
+     * @return boolean Boolean value if an existing intent was deleted,
+     *      otherwise, no intent was deleted.
+     */
+    public static function DeleteIntent($intentname) {
+        if (array_key_exists("intent_" . $intentname, $_SESSION)) {
+            unset($_SESSION["intent_" . $intentname]);
+            return true;
+        }
+        return false;
     }
     
 }
