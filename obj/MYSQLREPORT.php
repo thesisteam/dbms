@@ -14,6 +14,14 @@ class MYSQLREPORT {
     # Properties ---------------------------------------------------------------
 
     /**
+     * Array containing common cells' values<br>
+     * <b>Array-parameters</b>:<br>
+     * CELLS, IS_TRAILING
+     * @var Array
+     */
+    public $CommonCells;
+    
+    /**
      * Data containing query results from DB object
      * @var Array(assoc)
      */
@@ -54,14 +62,19 @@ class MYSQLREPORT {
      * @var DB
      */
     public $DB;
+    /**
+     * Child TABLE object for rendering reports
+     * @var TABLE
+     */
     public $TABLE;
 
     # Methods ------------------------------------------------------------------
 
-    public function __construct(array $a_headers = array(), array $query_result_data = array()) {
+    public function __construct(array $a_headers = array()) {
+        $this->CommonCells = array();
         $this->Reportheaders = $a_headers;
         $this->Reportproperties = array();
-        $this->Queryresultdata = $query_result_data;
+        $this->Queryresultdata = array();
         $this->Rowdata = array();
         $this->DB = null;
         $this->TABLE = null;
@@ -69,6 +82,21 @@ class MYSQLREPORT {
 
     public function __columnCount() {
         // Put a procedure here that will return column count of `Resultdata`
+    }
+    
+    /**
+     * 
+     * @param Array $a_rowdata Array of common cell values
+     * @param Boolean $is_trailing Boolean value if these cell values should be
+     *  trailing.
+     * @return \MYSQLREPORT
+     */
+    public function addCommonCells($a_rowdata, $is_trailing) {
+        array_push($this->CommonCells, array(
+            'CELLS' => $a_rowdata,
+            'IS_TRAILING' => $is_trailing
+        ));
+        return $this;
     }
 
     public function loadDb(DB $db) {
@@ -134,6 +162,11 @@ class MYSQLREPORT {
         foreach ($this->Rowdata as $row) {
             $this->TABLE->addRow($row);
         }
+        if (count($this->CommonCells) > 0) {
+            foreach($this->CommonCells as $commonCell) {
+                $this->TABLE->addCommonCells($commonCell['CELLS'], $commonCell['IS_TRAILING']);
+            }
+        }
 
         $this->TABLE->Render($is_boldheader);
     }
@@ -157,5 +190,5 @@ class MYSQLREPORT {
         $this->Reportheaders = $a_headers;
         return $this;
     }
-
+    
 }
