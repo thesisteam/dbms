@@ -1,0 +1,5 @@
+Monday, 21 July 2014, 0431H
+PROGRESS: "page/_admin/pendingusers.php" at line 39
+PROGRAMMER: Allen
+>> Create reports of Pending users for registration.
+On my way to add 'DEFAULT' property in Column headers of TABLE.php
