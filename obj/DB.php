@@ -234,7 +234,7 @@ final class DB {
      */
     public function Update($tablename) {
         $this->query('UPDATE ' . $tablename . ' ');
-        TrailspaceQuery();
+        $this->__trailspaceQuery();
         return $this;
     }
     
@@ -260,6 +260,32 @@ final class DB {
         $this->query .= 'WHERE ' . $condition . ' ';
         $this->__trailspaceQuery();
         return $this;
+    }
+
+    
+    
+    # Static functions ---------------------------------------------------------
+    
+    /**
+     * Lets you get the corresponding value of certain ID value from another
+     *      referenced foreign table. Otherwise, returns NULL
+     * @param mixed $id The ID value
+     * @param String $tablename The name of referenced foreign table
+     * @param String $field The name of the target field containing the
+     *      corresponding value
+     * @return String|null The returned corresponding value, NULL on failure
+     */
+    public static function __getSubstitute($id, $tablename, $field) {
+        $mysql = new DB();
+        $mysql->Select([$field])->
+        From($tablename)->
+        Where('`'.$tablename.'`'.'.`'.$id.'`');
+        $result = $mysql->Query();
+        if (count($result) > 0) {
+            return $result[0][$field];
+        } else {
+            return null;
+        }
     }
     
 }
