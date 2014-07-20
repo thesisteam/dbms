@@ -5,19 +5,14 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 
-<div class="col-lg-4 col-md-4 col-sm-4 main-placeholder">
+<div class="col-lg-3 col-md-3 col-sm-3 main-placeholder">
     <c class="left">Panel sections</c>
     <ul style="margin:0px; padding:0px 10px;">
+        <li><?php UI::makeNavigationLink('Home panel', UI::GetPageUrl('admin-home'), 'admin-home') ?></li>
         <li><?php UI::makeNavigationLink('System configuration', UI::GetPageUrl('admin-site-config'), 'admin-site-config'); ?></li>
         <li><?php UI::makeNavigationLink('Manage existing courses', UI::GetPageUrl('admin-manage-courses'), 'admin-manage-courses'); ?></li>
         <li><?php UI::makeNavigationLink('Pending user registrations', UI::GetPageUrl('admin-pending-registrations'), 'admin-pending-registrations'); ?>
         <li><?php UI::makeNavigationLink('Manage users', UI::GetPageUrl('admin-manage-users'), 'admin-manage-users');
-            $mysql = new DB();
-            $result = $mysql->Select(['count(*) as "PENDING_COUNT"'])
-                    ->From('user')
-                    ->Where('user.status=2')
-                    ->Query();
-            $pending_count = intval($result[0]['PENDING_COUNT']);
             if ($pending_count > 0) {
                 echo ' ('.$pending_count.')';
             }
