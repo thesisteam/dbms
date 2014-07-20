@@ -21,19 +21,18 @@ class TABLE {
 
     public $Columnheaders;
     # [0] => { CAPTION, COLUMN_TYPE, ALIGN, (...) }
-    
+
     /**
      * Assoc-array of row values/data
      * @var Array(assoc)
      */
     public $Rowdata;
-    
+
     /**
      * Assoc-array of HTML properties of this {TABLE} element
      * @var Array(assoc)
      */
     public $CellsHTMLtemplate;
-    
     public $HTMLcss;
     public $HTMLproperties;
 
@@ -74,15 +73,15 @@ class TABLE {
             ERROR::PromptError('<b>addCommonCells():</b> No existing row data yet!', 'TABLE.php');
             return false;
         }
+        // Proper start here
         for ($x = 0; $x < count($this->Rowdata); $x++) {
             if ($is_trailingcell) {
                 foreach ($a_rowdata as $rowcell) {
                     array_push($this->Rowdata[$x], $rowcell);
                 }
-            } 
-            else {
+            } else {
                 $new_rowdata = $a_rowdata;
-                foreach($this->Rowdata[$x] as $rowdata_cell) {
+                foreach ($this->Rowdata[$x] as $rowdata_cell) {
                     array_push($new_rowdata, $rowdata_cell);
                 }
                 $this->Rowdata[$x] = $new_rowdata;
@@ -126,42 +125,70 @@ class TABLE {
 
         echo '</table>';
     }
-    
+
     public function renderBody() {
         echo '<tbody>' . PHP_EOL;
         # ECHO <tr><td> { Row data } </td></tr>
         foreach ($this->Rowdata as $row) {
             echo '<tr>';
-            if (count($this->CellsHTMLtemplate) >= count($row)) {
+            $domin_max = 0; 
+            if (count($this->Columnheaders) > count($row)) {
+                $domin_max = count($this->Columnheaders);
+            } else {
+                $domin_max = count($row);
+            }
+            
+            if (count($this->CellsHTMLtemplate) >= $domin_max) { // {BEGIN IF}
                 # If HTML cell templates count is greater than or equal to
                 #       the number of cells for this row?
-                # Looping CELLs per ROW
-                $x = 0;
-                foreach ($row as $cellvalue) {
+
+                # Looping CELLs per ROW, and also with respect to COLUMN PROPERTIES                
+                for ($x_row=0,$x_colheader=0,$x_domin=0; 
+                        $x_domin < $domin_max; 
+                        $x_row++, $x_colheader++, $x_domin++) {
+                    $cellvalue = $x_row < count($row) ? $row[$x_row] : '';
+                    
+                    // ALL EXEMPTIONS FALL HERE
+                    # ---- Hide this cell under a HIDDEN COLUMN
+                    if (array_key_exists('HIDDEN', $this->Columnheaders[$x_colheader])) {
+                        if ($this->Columnheaders[$x_row]['HIDDEN']) {
+                            continue;
+                        }
+                    }
+                    # ---- If `current column` has DEFAULT VALUE, let it be
+                    # ---- the cell value
+                    if (array_key_exists('DEFAULT', $this->Columnheaders[$x_colheader])) {
+                        $cellvalue = $this->Columnheaders[$x_colheader]['DEFAULT'];
+                        $x_row--; // Don't let the row_counter move
+                    }
 
                     // Preparing <td> HTML options
                     $td_options = '';
                     if (count($this->CellsHTMLtemplate) > 0) {
                         do {
-                            $td_options .= strtolower(trim(key($this->CellsHTMLtemplate[$x])))
-                                    . '="' . trim(current($this->CellsHTMLtemplate[$x])) . '" ';
-                        } while (next($this->CellsHTMLtemplate[$x]));
-                        reset($this->CellsHTMLtemplate[$x]);
+                            $td_options .= strtolower(trim(key($this->CellsHTMLtemplate[$x_row])))
+                                    . '="' . trim(current($this->CellsHTMLtemplate[$x_row])) . '" ';
+                        } while (next($this->CellsHTMLtemplate[$x_row]));
+                        reset($this->CellsHTMLtemplate[$x_row]);
                     }
                     $td_options = trim($td_options);
 
                     // Rendering current cell
                     echo '<td ' . $td_options . '>';
-                    echo $cellvalue;
+                    // ---- Process all parameter within the cell value
+                    $a_params = $this->__getParamsFromValue($cellvalue);
+                    foreach ($a_params as $parameter) {
+                        $cellvalue = str_replace('{'.$parameter.'}', $row[intval($parameter)-1], $cellvalue);
+                    }
+                    echo $cellvalue; // <<--- Cell value here
                     echo '</td>';
-                    $x++;
                 }
             } else {
                 # If HTML Cell templates is less than the number of cells for this row
                 ERROR::PromptError('Error at rendering Table body when number of cells for this '
-                        . 'row is greater than the number of Cell templates!' . count($this->CellsHTMLtemplate)
+                        . 'row|header(whatever\'s max) is greater than the number of Cell templates!' . count($this->CellsHTMLtemplate)
                         . count($row), 'TABLE.php', 110);
-            }
+            } # { END IF }
             echo '</tr>';
         }
         echo '</tbody>';
@@ -174,10 +201,13 @@ class TABLE {
             foreach ($this->Columnheaders as $columnHeader) {
                 $td_properties = '';
                 echo '<td ';
+                # This about generating Header properties
                 if (count($columnHeader) > 0) {
                     do {
                         $key = strtoupper(key($columnHeader));
-                        if ($key=='CAPTION' || $key=='C_TYPE' || 'C_') {
+                        if ( $key == 'CAPTION' 
+                                || ($key=='HIDDEN' && !current($columnHeader))
+                                || ($key=='DEFAULT') ) {
                             continue;
                         }
                         $td_properties .= key($columnHeader) . '="' . current($columnHeader) . '" ';
@@ -197,10 +227,9 @@ class TABLE {
      * @param Array(Indexed-assoc) $a_headers Indexed Assoc-array of column headers of this table
      *  with format:<br>
      * { <br>
-     * <b>"CAPTION" =>"Caption1"</b>, <br>
-     * <b>"C_TYPE" => "TEXT|CHECKBOX|"</b>, <br>
-     * <b>"C_OBJNAME" => "TEXT|CHECKBOX|"</b>, <br>
-     * "ALIGN" = "left"<br>
+     * <b>"CAPTION" => "Caption1"</b><br>
+     * <b>"HIDDEN" => true|false</b><br>
+     * "ALIGN" => "left"<br>
      * }
      * @return TABLE New instance
      */
@@ -237,6 +266,41 @@ class TABLE {
     public function setHTMLproperties($a_htmlprops) {
         $this->HTMLproperties = $a_htmlprops;
         return $this;
+    }
+
+    # PRIVATE FUNCTIONS --------------------------------------------------------
+
+    /**
+     * Gets parameter from CELL VALUES and return it as array<br>
+     * <b>Example:</b> Your name is {1} and your age is {2}<br>
+     * <b>Return value:</b> array( 1, 2 )
+     * @param String $cellvalue The cell value to be inspected
+     * @return Array
+     */
+    public function __getParamsFromValue($cellvalue) {
+        $a_result = array();
+        if (strstr($cellvalue, '{') && strstr($cellvalue, '}')) {
+            $extractmode = false;
+            $str_integer = '';
+            for ($i = 0; $i < strlen($cellvalue); $i++) {
+                $char = $cellvalue[$i];
+                if ($char == '{') { // Begin Extraction
+                    $extractmode = true;
+                    continue;
+                } else if ($char == '}') { // End Extraction, validate value
+                    $extractmode = false;
+                    if (intval($str_integer) != 0) {
+                        array_push($a_result, intval($str_integer));
+                    }
+                    $str_integer = '';
+                    continue;
+                }
+                if ($extractmode) { // Extraction proper
+                    $str_integer .= $char;
+                }
+            }
+        }
+        return $a_result;
     }
 
 }
