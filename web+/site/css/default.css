@@ -16,7 +16,7 @@ body {
 /*==== Generic elements ====*/
 
 
-/**
+/** Caption headings
 */ c {
     display: block;
     font-size: 160%;
@@ -36,7 +36,7 @@ body {
     padding-bottom: 5px;
 }
 
-/* Main body content wrapper
+/** Main body content wrapper
 */ .main {
     box-sizing: border-box;
     padding: 25px 0px;
@@ -52,6 +52,25 @@ body {
     box-sizing: border-box;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+/** Table styles for reports
+*/ .rpt-borderable * {
+    border: 1px solid rgba(0,0,0,0.1);
+}
+/* Cells
+*/ .rpt-cell {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+/* Column headers
+*/.rpt-header {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding: 2px 5px 20px 5px;
+} .rpt-header * {
+    border: 0px;
+} .rpt-header-noborder {
+    padding: 2px 5px 20px 5px;
 }
 
 
