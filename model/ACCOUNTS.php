@@ -49,6 +49,7 @@ final class ACCOUNTS {
                             . 'user.userpower_id=userpower.id');
             $dbresult = $db->Query();
             if (count($dbresult) > 0) {
+                $dbresult = $dbresult[0];
                 if ($dbresult['username'] == $username && $dbresult['password'] == $auth_password) {
                     $result['IS_SUCCESS'] = true;
                     $result['USERTYPE'] = strtoupper($dbresult['userpower.label']);
@@ -167,14 +168,16 @@ final class ACCOUNTS {
     public static function Encryptor($data, $str_mode) {
         $mode = strtoupper($str_mode);
         if ($mode == 'ENCRYPT') {
-            $encrypted = bin2hex(base64_encode(
+            $encrypted = base64_encode(
                     bin2hex(
                             strrev(
                                     base64_encode(
-                                            bin2hex($data))))));
+                                            bin2hex($data)))));
+            $encrypted = str_replace('=', '@', $encrypted);
             return $encrypted;
         } else {
-            $decrypted = hex2bin(base64_decode(strrev(hex2bin(base64_decode(hex2bin($data))))));
+            $data = str_replace('@', '=', $data);
+            $decrypted = hex2bin(base64_decode(strrev(hex2bin(base64_decode($data)))));
             return $decrypted;
         }
     }
