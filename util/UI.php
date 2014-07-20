@@ -23,12 +23,19 @@ final class UI {
      * @param String $page
      * @return String The generated URL of the specified page
      */
-    public static function GetPageUrl($page) {
+    public static function GetPageUrl($page, $addons=array()) {
+        $return_url = "";
         if (Index::__HasPage($page)) {
-            return '?page=' . str_replace(" ", "-", $page);
+            $return_url = '?page=' . str_replace(" ", "-", $page);
         } else {
-            return '?page=no-page';
+            $return_url = '?page=no-page';
         }
+        if (count($addons)>0) {
+            do {
+                $return_url .= '&' . trim(key($addons)) . '=' . trim(current($addons));
+            } while(next($addons));
+        }
+        return $return_url;
     }
     
     public static function makeNavigationLink($text, $url, $str_disable_onpage='', $starttag='<b>', $endtag='</b>') {
@@ -67,9 +74,11 @@ final class UI {
      * @param String $str_caption Button caption
      * @param String $str_type Type of button
      * @param String $class CSS class properties for this button
-     * @param type $str_clickhref
+     * @param String $str_clickhref The target link for this button
+     * @param String $str_disable_on_page The current URL through UI::GetPageUrl() 
+     * @return String The rendered input button as HTML String code
      */
-    public static function Button($str_caption, $str_type="button", $class=null, $str_clickhref=null) {
+    public static function Button($str_caption, $str_type="button", $class=null, $str_clickhref=null, $is_render=true, $str_disable_on_page=null) {
         $strStream = '<input type="' . $str_type . '" value="' . $str_caption . '"';
         if (is_string($class)) {
             $strStream .= ' class="' . $class . '"';
@@ -77,8 +86,16 @@ final class UI {
         if (is_string($str_clickhref)) {
             $strStream .= ' onclick="window.location=\'' . $str_clickhref . '\'"';
         }
+        if (is_string($str_disable_on_page) && strtolower($str_disable_on_page)==strtolower(Index::__GetPage())) {
+            $strStream .= ' disabled';
+        }
         $strStream = trim($strStream) . '>' . PHP_EOL;
-        echo $strStream;
+        if ($is_render) {
+            echo $strStream;
+            return $strStream;
+        } else {
+            return $strStream;
+        }
     }
     
     /**
