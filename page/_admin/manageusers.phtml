@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<div class="container main">
+        <?php
+        Index::__IncludeSidebar('admin');
+        ?>
+    <div class="col-lg-8 col-md-8 col-sm-8 main-placeholder">
+        <c class="left">Manage users</c>
+        <c class="small">
+            In this section, you can manage all user accounts within the system.
+        </c>
+        <?php
+        $sql = new DB();
+        $sql->Select(['user.id', 'username', 'concat(fname, \' \', lname)'])->
+                From('user,profile')->
+                Where('user.id=profile.user_id');
+        $sqlResult = $sql->Query();
+
+        $rptUsers = new MYSQLREPORT(array(
+            [
+                'CAPTION' => 'ID',
+                'HIDDEN' => true
+            ],
+            [
+                'CAPTION' => 'Username',
+                'class' => 'rpt-header'
+            ],
+            [
+                'CAPTION' => 'Full name',
+                'class' => 'rpt-header'
+            ],
+            [
+                'CAPTION' => 'Actions',
+                'class' => 'rpt-header'
+            ]
+        ));
+        $rptUsers->setReportProperties(array(
+            'width' => '100%',
+            'align' => 'center'
+        ))->setReportCellstemplate(array(
+            [], 
+            [
+                'class' => 'rpt-cell'
+            ], [], []
+        ));
+        $rptUsers->loadResultdata($sqlResult);
+        $rptUsers->addCommonCells(array(
+        UI::Button('Edit profile', 'button', 'btn btn-primary btn-xs', UI::GetPageUrl('home'), false)
+                ), true);
+        $rptUsers->renderReport();
+        ?>
+    </div>
+</div>

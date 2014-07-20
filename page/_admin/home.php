@@ -6,6 +6,9 @@
  * and open the template in the editor.
  */
 
+if (!USER::IsAdmin()) {
+    UI::RedirectTo('home');
+}
 
 # Data processing for pending users --------------------------------------------
 $a_pendingusers = ACCOUNTS::getPendingUsers([

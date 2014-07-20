@@ -1,10 +1,10 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
+// Prepare to count all Pending users
+$mysql = new DB();
+$result = $mysql->Select(['count(*) as "PENDING_COUNT"'])
+        ->From('user')
+        ->Where('user.status=2')
+        ->Query();
+$pending_count = intval($result[0]['PENDING_COUNT']);
 ?>
