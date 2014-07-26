@@ -5,7 +5,7 @@
         
         $form = new FORM('frmSignupAdmin', 'post', '', 'col-lg-6 col-md-7 col-sm-7');
         
-        $form->AddText('Create an admin account');
+        $form->AddLabel('Create an admin account');
         $form->AddHidden('postType', '0');
         $form->AddInput('Admin username', 'postUsername', 'text', 
                 array(
@@ -31,7 +31,7 @@
                     'required' => 'true',
                     'maxlength' => 60
                 ), 'REQUIRED');
-        $form->AddText('Recover a forgotten admin password through a security question');
+        $form->AddLabel('Recover a forgotten admin password through a security question');
         $form->AddInput('Security question', 'postSecquestion', 'text', 
                 array(
                     'required' => 'true',
@@ -46,8 +46,8 @@
         
         UI::HorizontalLine();
         
-        $form->AddText('Database protocol configuration', 'large');
-        $form->AddText('Configure the MySQL database connection settings for this system to work.');
+        $form->AddLabel('Database protocol configuration', 'large');
+        $form->AddLabel('Configure the MySQL database connection settings for this system to work.');
         
         $form->AddInput('Database name', 'postDbname', 'text', 
                 array(

@@ -1,5 +1,8 @@
 <?php
 
+# Prepare a passage
+DATA::openPassage('admin-action-pendings');
+
 $a_pendinglist = ACCOUNTS::getPendingUsers(array(
             'user.id', 'userpower_id', 'username', 'concat(fname, \' \', lname)'
                 ), true);
@@ -28,12 +31,12 @@ $rptPendingusers->setReportProperties(array(
                     UI::Button('Approve', 'button', 'btn btn-warning btn-xs', 
                             UI::GetPageUrl('admin-action-pendings', array(
                                 'who' => '{1}',
-                                'approve' => 'true'
+                                'is_approve' => 'true'
                             )), false) . '&nbsp;' .
                     UI::Button('Reject', 'button', 'btn btn-danger btn-xs',
                             UI::GetPageUrl('admin-action-pendings', array(
                                 'who' => '{1}',
-                                'approve' => 'false'
+                                'is_approve' => 'false'
                             )), false),
                 'class' => 'rpt-header-noborder',
                 'width' => '50%'

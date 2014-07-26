@@ -113,6 +113,29 @@ final class UI {
         }
         echo ($is_orderedlist ? '</ol>' : '</ul>') . PHP_EOL;
     }
+    
+    /**
+     * 
+     * @param Array (Optional) $options HTML properties
+     * @param String (Optional) $innerhtml Inner HTML content of this element
+     * @param Boolean (Optional) $return Boolean value if this is returnable and not printable
+     * @return string The HTML string
+     */
+    public static function Divbox($options=array(), $innerhtml=null, $return=false) {
+        $html = '<div ';
+        do {
+            $html .= key($options) . '="' . current($options) . '" ';
+        } while(next($options));
+        $html = trim($html) . '>';
+        if (!is_null($innerhtml)) {
+            $html .= $innerhtml;
+        }
+        $html .= '</div>' . PHP_EOL;
+        if ($return) {
+            return $html;
+        }
+        echo $html;
+    }
 
     /**
      * Prints an HTML horizontal line (hr) element

@@ -26,19 +26,33 @@ final class CONFIG {
         return file_exists($this->path);
     }
 
-    public function Load($configdata) {
-        $this->configdata = $configdata;
+    public function Load($configdata, $is_append) {
+        if ($is_append) {
+            ARRAYS::Merge($this->configdata, $configdata);
+        } else {
+            $this->configdata = $configdata;
+        }
     }
 
     public function Read() {
         if (!$this->Exists()) {
             return false;
         }
-        return parse_ini_file($this->path);
+        $this->configdata = parse_ini_file($this->path);
+        return $this->configdata;
     }
 
     public function SetHeader($arr_headers) {
         $this->headers = $arr_headers;
+    }
+    
+    public function Set($key, $value) {
+        if (!key_exists($key, $this->configdata)) {
+            array_push($this->configdata, array($key => $value));
+        } else {
+            $this->configdata[$key] = $value;
+        }
+        return $this;
     }
 
     /**

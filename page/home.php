@@ -1,5 +1,4 @@
 <?php
-
 if (USER::IsLoggedin()) {
     UI::RedirectTo(User::GetLandpage());
 }

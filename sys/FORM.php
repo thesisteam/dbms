@@ -72,7 +72,7 @@ class FORM {
      * @param Boolean $is_fullwidth
      * @param type $input_class
      */
-    public function AddDropdown($label, $name, $choices=array(), $options=array(), $scheme="DEFAULT", $tooltip=null, $is_fullwidth=false, $input_class=null) {
+    public function AddDropdown($label, $name, $choices=array(), $options=array(), $scheme="DEFAULT", $tooltip=null, $is_fullwidth=false, $input_class=null, $selectedvalue=null) {
         $input_id = strtolower(str_replace(" ", "", $name));
         $scheme = strtoupper($scheme);
         $label_class = ($scheme==="REQUIRED" ? "label-primary" : "label-default");
@@ -92,12 +92,15 @@ class FORM {
         
         // Check and apply `$choices` array parameter
         //  for this dropdown element
+        $x=0;
         do {
             echo '<option value="' . current($choices) . '" '
                     . (Index::__HasPostData($name) ? 
-                        ( DATA::__GetPOST($name) == current($choices) ? 'selected' : '' 
-                            ) : '') 
+                        ( DATA::__GetPOST($name) == current($choices) ? 'selected' : '' )
+                      : ($selectedvalue == current($choices) ?
+                            'selected' : ''))
                     . '>' . key($choices) . '</option>';
+            $x++;
         } while(next($choices));
         echo '</select><br>';
         
@@ -107,14 +110,24 @@ class FORM {
         echo '<input type="hidden" name="'.$name.'" value="' . $value . '">';
     }
     
-    public function AddText($text, $str_size='mid', $str_alignment='left') {
+    public function AddLabel($text, $str_size='mid', $str_alignment='left') {
         echo '<c class="' . $str_size . ' ' . $str_alignment . '">'
                 . $text . '</c>';
         echo '<br>';
     }
     
-    public function RenderSubmitButton($caption) {
-        echo ' <input type="submit" value="' . $caption . '" class="btn btn-primary btn-sm"> ';
+    public function AddText($text, $padding_val='5px 2px') {
+        echo '<div style="padding: ' . $padding_val . ';">';
+        echo $text;
+        echo '</div>';
+    }
+    
+    public function RenderSubmitButton($caption, $return=false) {
+        $html = ' <input type="submit" value="' . $caption . '" class="btn btn-primary btn-sm"> ';
+        if ($return) {
+            return $html;
+        }
+        echo $html;
     }
     
     public function RenderCancelButton($caption, $str_actionpage=null) {

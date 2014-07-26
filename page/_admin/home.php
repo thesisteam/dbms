@@ -8,6 +8,7 @@
 
 if (!USER::IsAdmin()) {
     UI::RedirectTo('home');
+    die('Redirected!');
 }
 
 # Data processing for pending users --------------------------------------------

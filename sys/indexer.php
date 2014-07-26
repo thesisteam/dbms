@@ -22,7 +22,7 @@ final class Index {
         // session
         session_start();
 
-        # ---- ALL CUSTOM INITIALIZATIONS SHOULD BE PLACED BELOW -------
+        # ---- ALL CUSTOM INITIALIZATIONS SHOULD BE PLACED BELOW ---------------
         // Determine if System is properly installed
         if (!SYS::__isProperlyInstalled() && self::__GetPage() != 'install') {
             UI::RedirectTo('install');
@@ -43,8 +43,17 @@ final class Index {
 
         // Checks for dedicated flashes, otherwise, clears it
         if (!FLASH::_isDedicatedHere()) {
-            FLASH::clearFlashes();
+            FLASH::clearFlashes(self::__GetPage());
         }
+        
+        // Checks for "Data Passage Gate" page dedication, otherwise, destroy it
+        //      to save data space
+        if (!DATA::__IsPassageDedicatedHere()) {
+            # Close passage and destroy intents
+            DATA::closePassage();
+        }
+        
+        # ---- END OF CUSTOM INITIALIZATIONS -----------------------------------
     }
 
     public function LoadClass($classname) {

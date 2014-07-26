@@ -40,7 +40,7 @@ class FLASH {
     /**
      * Adds a flash message to current flash contents.
      * @param String $flash The flash message you want to add
-     * @param String $target_page Page where this Flash is dedicated
+     * @param String/Array $target_page Page/pages where this Flash is dedicated
      * @param String $type The type of message, could be "PROMPT" or "ERROR" (or "EMPTY")
      * @param boolean $is_clearfirst Optional boolean value if existing flashes should be truncated first.
      */
@@ -59,13 +59,14 @@ class FLASH {
         # -- Assign Content type
         $_SESSION[self::$FLASH_SESS_TYPE] = $type;        
         # -- Assign Target page
-        $_SESSION[self::$FLASH_DEDICATION_KEY] = trim(strtolower($target_page));
+        $_SESSION[self::$FLASH_DEDICATION_KEY] = $target_page;
         return true;
     }
 
     /**
      * Lets you add a group of flash messages.
      * @param Array $flashes Array of flash messages
+     * @param String/Array $target_page Page/pages where this Flash is dedicated
      * @param String $type The type of message, could be "PROMPT" or "ERROR" (or "EMPTY")
      * @param boolean $is_clearfirst Optional boolean value if existing flashes should be truncated first.
      */
@@ -129,8 +130,10 @@ class FLASH {
     /**
      * Clears the Flash contents
      */
-    public static function clearFlashes() {
+    public static function clearFlashes($page=null) {
         $_SESSION[self::$FLASH_SESS_KEY] = array();
+        $_SESSION[self::$FLASH_SESS_TYPE] = null;
+        $_SESSION[self::$FLASH_DEDICATION_KEY] = null;
     }
     
     /**
@@ -190,7 +193,16 @@ class FLASH {
         if (!array_key_exists(self::$FLASH_DEDICATION_KEY, $_SESSION)) {
             $_SESSION[self::$FLASH_DEDICATION_KEY] = null;
         }
-        return trim(strtolower(Index::__GetPage())) == trim(strtolower($_SESSION[self::$FLASH_DEDICATION_KEY]));
+        # Otherwise, proceed with Page dedication checking
+        if (is_array($_SESSION[self::$FLASH_DEDICATION_KEY])) {
+            for($i=0; $i<count($_SESSION[self::$FLASH_DEDICATION_KEY]); $i++) {
+                if (strtolower(Index::__GetPage()) == trim(strtolower($_SESSION[self::$FLASH_DEDICATION_KEY][$i]))) {
+                    return true;
+                }
+            } return false;
+        } else {
+            return strtolower(Index::__GetPage()) == trim(strtolower($_SESSION[self::$FLASH_DEDICATION_KEY]));
+        }
     }
     
     /**

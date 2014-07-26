@@ -13,7 +13,17 @@
  * @author Allen
  */
 final class ARRAYS {
-    // Reserved Static utility class for further Advanced array manipulations
+    
+    /**
+     * Merges 2 arrays
+     * @param Array $array1 (Reference)The first array and the container
+     * @param Array $array2 The second array
+     */
+    public static function Merge(&$array1, $array2) {
+        foreach($array2 as $element) {
+            array_push($array1, $element);
+        }
+    }
     
     
 }

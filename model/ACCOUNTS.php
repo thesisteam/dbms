@@ -30,12 +30,12 @@ final class ACCOUNTS {
             'USERTYPE' => null,
             'USERNAME' => $username
         );
-
+        
         # Encrypt first the credential
         $auth_password = ACCOUNTS::Encryptor($password, 'ENCRYPT');
         # Authenticate with Admin flatfile first
         $admincredentials = parse_ini_file(DIR::$CONFIG . 'admin.ini');
-        if ($username == $admincredentials['username'] && $auth_password == $admincredentials['password'] && $password == ACCOUNTS::Encryptor($admincredentials['password'], 'DECRYPT')) {
+        if (strtolower($username) == strtolower($admincredentials['username']) && $auth_password == $admincredentials['password'] && $password == ACCOUNTS::Encryptor($admincredentials['password'], 'DECRYPT')) {
             $result['IS_SUCCESS'] = true;
             $result['USERTYPE'] = 'SUPERADMIN';
             $result['USERNAME'] = $admincredentials['username'];
@@ -55,6 +55,9 @@ final class ACCOUNTS {
                     $result['USERTYPE'] = strtoupper($dbresult['userpower.label']);
                     $result['USERNAME'] = $dbresult['username'];
                 }
+            } else {
+                # If Authentication is OVERALL FAILURE
+                return $result;
             }
         }
         # If Authentication is SUCCESS, log to the user credential session
